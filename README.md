@@ -7,25 +7,27 @@
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Domain--Driven-009688?style=for-the-badge)](https://en.wikipedia.org/wiki/Clean_architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-Motor backend empresarial para la emisión de **Facturación Electrónica, Gestión de Inventario con Kardex Inmutable y Control de Cajas (Punto de Venta)**. Diseñado bajo estándares de alta concurrencia, tipado estricto con PHP 8.2+ y desacoplamiento por capas.
+Motor backend empresarial para la emisión de **Facturación Electrónica, Gestión de Inventario con Kardex Inmutable y Control de Cajas (Punto de Venta)**. Diseñado bajo estándares de alta concurrencia, tipado estricto con PHP 8.2+ y desacoplamiento por capas (Service Layer Pattern).
 
 Inspirado en la arquitectura abierta y mejores prácticas de proyectos líderes como **[Crater Invoice](https://github.com/crater-invoice/crater)**, **[Invoice Ninja](https://github.com/invoiceninja/invoiceninja)** y **[Akaunting](https://github.com/akaunting/akaunting)**.
 
 ---
 
-## 🏛️ Características de Arquitectura & Diseño de Datos
+## 🏛️ Características de Arquitectura & Lógica de Negocio
 
-1. **Multi-Tenancy y Multi-Sucursal:**
-   - Estructura jerárquica: `Company` ➔ `Branch` ➔ `Warehouse` / `CashRegister`.
-   - Soporte para múltiples puntos de emisión y almacenes descentralizados.
-2. **Kardex Inmutable (Audit-Trail):**
-   - Tabla `stock_movements` de solo inserción (*Append-Only*). Cada fila registra el costo promedio ponderado y balance resultante con enlaces polimórficos (`Invoice`, `Purchase`, etc.).
+1. **Capa de Servicios Desacoplada (Service Layer Pattern):**
+   - Controladores delgados (*Skinny Controllers*) que delegan la lógica a servicios especializados:
+     * `InvoiceService`: Orquestación de borradores, emisión con correlativo bloqueado, anulación y cobros.
+     * `InventoryService`: Movimientos atómicos de kardex y recálculo de costo promedio ponderado.
+     * `CashService`: Apertura/cierre de turnos de caja, conciliación de efectivo y arqueo físico.
+2. **Kardex Inmutable con Costo Promedio Ponderado (Audit-Trail):**
+   - Tabla `stock_movements` de solo inserción (*Append-Only*). Las entradas recalculan dinámicamente el costo unitario promedio; las salidas auditan el costo de venta y validan stock disponible con bloqueo pesimista (`lockForUpdate()`).
 3. **Manejo de Concurrencia en Facturación:**
-   - Series de documentos (`document_series`) con tipificación fiscal (`01` Factura, `03` Boleta, `07` NC, `08` ND) preparadas para incrementos atómicos con `lockForUpdate()`.
+   - Control de correlativos (`document_series`) con `lockForUpdate()`, garantizando numeración secuencial y sin saltos fiscales ante múltiples peticiones simultáneas.
 4. **Protección Atómica en Turnos de Caja (POS):**
-   - Restricción `UNIQUE(cash_register_id, open_flag)`: `open_flag` es `true` mientras el turno está activo y pasa a `NULL` al cerrar. Esto previene aperturas simultáneas sin fallar en PostgreSQL ni MySQL.
-5. **Modelos Eloquent con Tipado Estricto (PHP 8.2 Backed Enums):**
-   - Uso de Enums tipados para estados de facturas (`InvoiceStatus`), tipos de documentos (`DocType`), motivos de kardex (`StockMovementReason`) y métodos de pago (`PaymentMethodType`).
+   - Restricción `UNIQUE(cash_register_id, open_flag)`: `open_flag` es `true` mientras el turno está activo y pasa a `NULL` al cerrar, garantizando a nivel de motor de base de datos que jamás existan dos turnos abiertos simultáneos en una misma caja registradora.
+5. **Tipado Estricto & Enums Nativos (PHP 8.2):**
+   - Backed Enums para tipos de documentos (`DocType`), estados de facturación (`InvoiceStatus`), movimientos de inventario (`StockMovementReason`) y condiciones de pago.
 
 ---
 
@@ -34,7 +36,10 @@ Inspirado en la arquitectura abierta y mejores prácticas de proyectos líderes 
 ```text
 ├── app/
 │   ├── Enums/                 # PHP 8.2 Backed Enums (DocType, InvoiceStatus, etc.)
-│   └── Models/                # 23 Modelos Eloquent con relaciones, casts y scopes
+│   ├── Exceptions/            # BusinessException (manejo unificado de errores 422)
+│   ├── Http/Controllers/      # Controladores REST delgados para la API
+│   ├── Models/                # 23 Modelos Eloquent con relaciones, casts y scopes
+│   └── Services/              # Capa de negocio (InvoiceService, InventoryService, CashService)
 ├── bootstrap/
 │   └── app.php                # Configuración modular moderna de Laravel 11
 ├── database/
@@ -93,8 +98,6 @@ erDiagram
 ---
 
 ## 🚀 Despliegue Local con Docker
-
-Para levantar todo el entorno de desarrollo (PHP 8.2, Nginx, PostgreSQL 15 y Redis):
 
 ```bash
 # 1. Clonar el repositorio
