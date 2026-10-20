@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: billing_app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
+    environment:
+      DB_CONNECTION: pgsql
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_DATABASE: billing_db
+      DB_USERNAME: billing_user
+      DB_PASSWORD: secret_password
+    depends_on:
+      - db
+      - redis
+    networks:
+      - billing_network
+
+  webserver:
+    image: nginx:alpine
+    container_name: billing_webserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/
+    depends_on:
+      - app
+    networks:
+      - billing_network
+
+  db:
+    image: postgres:15-alpine
+    container_name: billing_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: billing_db
+      POSTGRES_USER: billing_user
+      POSTGRES_PASSWORD: secret_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - billing_network
+
+  redis:
+    image: redis:alpine
+    container_name: billing_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - billing_network
+
+networks:
+  billing_network:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
