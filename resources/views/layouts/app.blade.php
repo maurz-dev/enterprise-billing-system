@@ -80,7 +80,7 @@
         }
 
         /* Sidebar Styles */
-        .apex-sidebar, .crater-sidebar {
+        .apex-sidebar {
             width: var(--sidebar-width);
             background: var(--surface);
             border-right: 1px solid var(--border);
@@ -94,7 +94,7 @@
             transition: var(--transition);
         }
 
-        .apex-brand, .crater-brand {
+        .apex-brand {
             height: var(--header-height);
             display: flex;
             align-items: center;
@@ -103,7 +103,7 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .apex-logo-icon, .crater-logo-icon {
+        .apex-logo-icon {
             width: 38px;
             height: 38px;
             background: var(--accent-gradient);
@@ -115,18 +115,18 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
         }
 
-        .apex-brand-title, .crater-brand-title {
+        .apex-brand-title {
             font-size: 1.15rem;
             font-weight: 800;
             letter-spacing: -0.02em;
             color: var(--text-main);
         }
 
-        .apex-brand-title span, .crater-brand-title span {
+        .apex-brand-title span {
             color: var(--primary);
         }
 
-        .apex-nav, .crater-nav {
+        .apex-nav {
             padding: 20px 14px;
             display: flex;
             flex-direction: column;
@@ -184,7 +184,7 @@
         }
 
         /* Main Workspace Wrapper */
-        .apex-workspace, .crater-workspace {
+        .apex-workspace {
             margin-left: var(--sidebar-width);
             flex: 1;
             display: flex;
@@ -195,7 +195,7 @@
         }
 
         /* Top Bar */
-        .apex-topbar, .crater-topbar {
+        .apex-topbar {
             height: var(--header-height);
             background: var(--surface);
             border-bottom: 1px solid var(--border);
@@ -266,7 +266,7 @@
         }
 
         /* Timer Trigger Button */
-        .btn-timer-trigger, .btn-ninja-timer {
+        .btn-timer-trigger {
             display: inline-flex;
             align-items: center;
             gap: 9px;
@@ -282,13 +282,13 @@
             transition: var(--transition);
         }
 
-        .btn-timer-trigger:hover, .btn-ninja-timer:hover {
+        .btn-timer-trigger:hover {
             border-color: var(--primary);
             background: var(--primary-light);
             transform: translateY(-1px);
         }
 
-        .btn-timer-trigger.is-active, .btn-ninja-timer.is-active {
+        .btn-timer-trigger.is-active {
             background: var(--accent-gradient);
             color: white;
             border-color: transparent;
@@ -323,7 +323,7 @@
         }
 
         /* Main Content Container */
-        .apex-content, .crater-content {
+        .apex-content {
             padding: 32px;
             flex: 1;
         }
@@ -396,7 +396,7 @@
         .badge-voided { background: #f1f5f9; color: #475569; }
 
         /* Card Layout */
-        .apex-card, .crater-card {
+        .apex-card {
             background: var(--surface);
             border: 1px solid var(--border);
             border-radius: var(--radius-md);
@@ -405,7 +405,7 @@
         }
 
         /* Headers & Containers */
-        .apex-invoice-container, .crater-invoice-container {
+        .apex-invoice-container {
             display: flex;
             flex-direction: column;
             gap: 24px;
@@ -473,7 +473,7 @@
         }
 
         /* Tabs Header */
-        .apex-tabs-header, .crater-tabs-header {
+        .apex-tabs-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -553,11 +553,11 @@
             width: 100%;
             overflow-x: auto;
         }
-        .apex-list-table, .crater-list-table {
+        .apex-list-table {
             width: 100%;
             border-collapse: collapse;
         }
-        .apex-list-table th, .crater-list-table th {
+        .apex-list-table th {
             background: var(--surface-subtle);
             padding: 14px 20px;
             font-size: 0.76rem;
@@ -568,14 +568,14 @@
             border-bottom: 1px solid var(--border);
             text-align: left;
         }
-        .apex-list-table td, .crater-list-table td {
+        .apex-list-table td {
             padding: 14px 20px;
             border-bottom: 1px solid var(--border);
             font-size: 0.88rem;
             color: var(--text-main);
             vertical-align: middle;
         }
-        .apex-list-table tr:hover td, .crater-list-table tr:hover td {
+        .apex-list-table tr:hover td {
             background: var(--surface-subtle);
         }
         .invoice-number-link {
@@ -628,7 +628,7 @@
         }
 
         /* Modals & Forms */
-        .apex-modal, .crater-modal {
+        .apex-modal {
             position: fixed;
             inset: 0;
             z-index: 100;
@@ -636,13 +636,13 @@
             align-items: center;
             justify-content: center;
         }
-        .apex-modal-backdrop, .crater-modal-backdrop {
+        .apex-modal-backdrop {
             position: absolute;
             inset: 0;
             background: rgba(15, 23, 42, 0.55);
             backdrop-filter: blur(4px);
         }
-        .apex-modal-dialog, .crater-modal-dialog {
+        .apex-modal-dialog {
             position: relative;
             background: var(--surface);
             border-radius: var(--radius-md);
@@ -653,14 +653,14 @@
             z-index: 101;
             border: 1px solid var(--border);
         }
-        .apex-label, .crater-label {
+        .apex-label {
             display: block;
             font-size: 0.82rem;
             font-weight: 700;
             color: var(--text-muted);
             margin-bottom: 6px;
         }
-        .apex-select, .crater-select, .apex-input, .crater-input, .apex-textarea, .crater-textarea {
+        .apex-select, .apex-input, .apex-textarea {
             width: 100%;
             padding: 10px 14px;
             border: 1.5px solid var(--border);
@@ -672,7 +672,7 @@
             outline: none;
             transition: var(--transition);
         }
-        .apex-select:focus, .crater-select:focus, .apex-input:focus, .crater-input:focus, .apex-textarea:focus {
+        .apex-select:focus, .apex-input:focus, .apex-textarea:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px var(--primary-glow);
         }
@@ -723,9 +723,9 @@
 
         /* Responsive Breakpoints */
         @media (max-width: 900px) {
-            .apex-sidebar, .crater-sidebar { transform: translateX(-100%); }
-            .apex-sidebar.open, .crater-sidebar.open { transform: translateX(0); }
-            .apex-workspace, .crater-workspace { margin-left: 0; }
+            .apex-sidebar { transform: translateX(-100%); }
+            .apex-sidebar.open { transform: translateX(0); }
+            .apex-workspace { margin-left: 0; }
         }
     </style>
     @stack('styles')
@@ -899,7 +899,7 @@
                 tag_tasks: "Tareas",
                 invoices_title: "Facturación & Comprobantes",
                 invoices_subtitle: "Gestión de comprobantes fiscales, cobranzas y facturación electrónica",
-                btn_new_invoice: "+ Nueva Factura",
+                btn_new_invoice: "Nueva Factura",
                 btn_tasks_timer: "Tareas & Timer",
                 stat_total_invoiced: "Total Facturado",
                 stat_total_invoiced_sub: "Comprobantes emitidos y pagados",
@@ -949,7 +949,7 @@
                 th_balance: "Saldo Resultante",
                 pos_title: "Caja POS & Control de Turnos",
                 pos_subtitle: "Gestión atómica de turnos de cajero, arqueos físicos y conciliación de cobros",
-                btn_open_shift: "+ Abrir Turno de Caja",
+                btn_open_shift: "Abrir Turno de Caja",
                 btn_close_shift: "Cerrar Turno de Caja",
                 opening_balance: "Saldo Inicial",
                 cash_collected: "Efectivo Recaudado",
@@ -984,7 +984,7 @@
                 stop_timer: "Detener",
                 no_invoices_found: "No se encontraron facturas",
                 no_invoices_sub: "Comienza creando tu primera factura o emitiendo tareas registradas.",
-                btn_create_first: "+ Crear Primera Factura",
+                btn_create_first: "Crear Primera Factura",
                 new_invoice_title: "Nueva Factura",
                 download_pdf: "Descargar PDF",
                 save_draft: "Guardar Borrador",
@@ -999,7 +999,7 @@
                 credit_label: "Al Crédito (15 días)",
                 line_items_title: "Detalle de Líneas y Productos",
                 line_items_subtitle: "Selecciona ítems del catálogo o ingresa descripciones libres",
-                add_item: "+ Añadir Ítem",
+                add_item: "Añadir Ítem",
                 notes_label: "Notas & Términos Fiscales",
                 subtotal: "Subtotal",
                 tax_igv: "IGV (18.00%)",
@@ -1024,7 +1024,7 @@
                 tag_tasks: "Tasks",
                 invoices_title: "Invoices & Billing",
                 invoices_subtitle: "Fiscal billing, accounts receivable, and electronic document management",
-                btn_new_invoice: "+ New Invoice",
+                btn_new_invoice: "New Invoice",
                 btn_tasks_timer: "Tasks & Timer",
                 stat_total_invoiced: "Total Invoiced",
                 stat_total_invoiced_sub: "Issued and settled invoices",
@@ -1074,7 +1074,7 @@
                 th_balance: "Resulting Balance",
                 pos_title: "POS Terminal & Shift Shifts",
                 pos_subtitle: "Atomic cashier shift management, physical counts, and payment reconciliation",
-                btn_open_shift: "+ Open Register Shift",
+                btn_open_shift: "Open Register Shift",
                 btn_close_shift: "Close Register Shift",
                 opening_balance: "Opening Balance",
                 cash_collected: "Collected Cash",
@@ -1109,7 +1109,7 @@
                 stop_timer: "Stop",
                 no_invoices_found: "No invoices found",
                 no_invoices_sub: "Get started by creating your first invoice or billing recorded tasks.",
-                btn_create_first: "+ Create First Invoice",
+                btn_create_first: "Create First Invoice",
                 new_invoice_title: "New Invoice",
                 download_pdf: "Download PDF",
                 save_draft: "Save Draft",
@@ -1124,7 +1124,7 @@
                 credit_label: "Credit (15 days)",
                 line_items_title: "Line Items & Products",
                 line_items_subtitle: "Select catalog items or enter custom descriptions",
-                add_item: "+ Add an item",
+                add_item: "Add Item",
                 notes_label: "Notes & Fiscal Terms",
                 subtotal: "Subtotal",
                 tax_igv: "Tax (18.00%)",

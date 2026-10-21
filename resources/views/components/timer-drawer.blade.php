@@ -705,8 +705,8 @@
 
     // Toggle Drawer Open/Close
     function toggleTimerDrawer() {
-        const drawer = document.getElementById('timerDrawer') || document.getElementById('ninjaDrawer');
-        const overlay = document.getElementById('timerDrawerOverlay') || document.getElementById('ninjaDrawerOverlay');
+        const drawer = document.getElementById('timerDrawer');
+        const overlay = document.getElementById('timerDrawerOverlay');
         const isOpen = drawer.classList.contains('open');
 
         if (isOpen) {

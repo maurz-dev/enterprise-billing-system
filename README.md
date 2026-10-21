@@ -1,35 +1,79 @@
-# Enterprise Invoicing, Inventory & POS Core Engine
+# Apex Billing — Enterprise Invoicing, Kardex & POS Engine
 
 [![PHP](https://img.shields.io/badge/PHP-8.2%2B-777BB4?style=flat-square&logo=php&logoColor=white)](https://www.php.net/)
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=flat-square&logo=laravel&logoColor=white)](https://laravel.com/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15%2B-4169E1?style=flat-square&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com/)
+[![UI Engine](https://img.shields.io/badge/UI_Engine-High--Speed_SPA-06B6D4?style=flat-square)](https://github.com/maurz-dev/enterprise-billing-system)
 [![PDF Engine](https://img.shields.io/badge/PDF_Engine-DomPDF_Blade-E11D48?style=flat-square)](https://github.com/barryvdh/laravel-dompdf)
-[![Architecture](https://img.shields.io/badge/Architecture-Clean_%2F_Layered-009688?style=flat-square)](https://en.wikipedia.org/wiki/Clean_architecture)
+[![Architecture](https://img.shields.io/badge/Architecture-Clean_%2F_Domain_Driven-009688?style=flat-square)](https://en.wikipedia.org/wiki/Clean_architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-gray.svg?style=flat-square)](https://opensource.org/licenses/MIT)
 
-Enterprise-grade backend engine designed for high-concurrency **Electronic Invoicing, Fiscal PDF Document Generation, Multi-Warehouse Inventory with Immutable Kardex, and Atomic Point-of-Sale (POS) Cash Register Management**.
+**Apex Billing** es una plataforma integral de backend y frontend de alto rendimiento diseñada para entornos comerciales de alta concurrencia. Unifica en un único ecosistema empresarial: **Facturación Electrónica Fiscal (Facturas, Boletas, Notas de Crédito), Generación de PDF A4 Oficial, Kardex Multialmacén Inmutable con Costo Promedio Ponderado (CPP/WAC), Control de Turnos de Caja POS con Auditoría de Descuadres, y un Módulo Companion de Seguimiento de Tiempo Facturable**.
 
-Engineered using strict typing with PHP 8.2+, Laravel 11, and Domain Service Layer patterns, delivering an independent, unified architecture for electronic billing, billable task tracking, multi-warehouse Kardex, and POS terminal cash management.
+Desarrollado bajo principios de arquitectura limpia con tipado estricto en PHP 8.2+, Laravel 11, PostgreSQL 15 y una interfaz reactiva SPA sin recargas (con hover prefetching y cambio de vistas en <50ms), soporte para Modo Oscuro/Claro y cambio dinámico de idioma (Español / Inglés).
 
 ---
 
-## Technical Specifications & Architecture
+## Módulos Principales de la Plataforma
 
-### 1. Business Problem & Systems Engineering
+```
+                                  APEX BILLING ENGINE
+        ┌───────────────────────────────────┬───────────────────────────────────┐
+        │                                   │                                   │
+  [1. Facturación]                  [2. Kardex & Stock]                  [3. Caja POS]
+  • Correlativos atómicos           • Multialmacén centralizado          • Control de turnos
+  • Bloqueo pessimistic lock        • Costo Promedio (CPP/WAC)           • Apertura con fondo
+  • Estados: Draft/Emitido/Pagado   • Movimientos inmutables             • Arqueo físico de cierre
+  • Generación de PDF fiscal        • Alertas de stock crítico           • Auditoría de descuadres
+        │                                   │                                   │
+        └───────────────────────────────────┴───────────────────────────────────┘
+                                            │
+                             [4. Companion: Tareas & Timer]
+                             • Cronómetro en tiempo real
+                             • Registro manual de horas trabajadas
+                             • Conversión automática de horas a Factura
+                             • Persistencia reactiva en localStorage
+```
 
-Medium-sized businesses and multi-branch commercial networks face critical failure modes in high-volume transaction environments:
+### 1. Facturación Electrónica & Comprobantes (`/invoices`)
+* **Dashboard Financiero en Tiempo Real:** 4 tarjetas métricas con total facturado, saldos por cobrar, borradores pendientes e histórico general.
+* **Filtros Inmediatos por Estado:** Pestañas dinámicas para ver comprobantes: *Todos, Vencidos, Borrador, Emitidos, Pagados y Anulados*.
+* **Emisión con Bloqueo Pesimista (`lockForUpdate`):** Garantiza cero huecos correlativos y previene colisiones concurrentes en series fiscales multi-sucursal (`F001`, `B001`).
+* **Generador de Facturas ([/invoices/create](http://localhost:8080/invoices/create)):** Selector de clientes con autocompletado de RUC/DNI y dirección, selector de series fiscales, cálculo de subtotal, IGV (18%) y total automático en soles (`S/`) o dólares (`$`).
+* **Motor PDF A4 Fiscal ([/invoices/{id}/pdf](http://localhost:8080/invoices/1/pdf)):** Emisión e impresión de comprobantes con formato corporativo oficial, códigos QR, desglose de impuestos y términos bancarios.
 
-* **Fiscal Correlative Collisions:** Concurrent checkouts across POS terminals causing numbering gaps, duplicate series numbers, or regulatory rejections.
-* **Cost Distortion & Negative Stock:** High-concurrency sales across distributed warehouses leading to inventory overselling and calculation inaccuracies in cost of goods sold (COGS).
-* **Cash Register Audit Deficits:** Inability to maintain atomic shift transitions, cash variances, and transaction auditing across multiple cashiers.
+### 2. Kardex Multialmacén & Valoración de Existencias (`/inventory`)
+* **Métricas Globales de Existencias:** Monitoreo de unidades totales en almacenes, productos catalogados y semáforo de alertas para stock crítico.
+* **Control Multialmacén:** Consulta detallada de inventario por almacén principal y sucursales.
+* **Libro Mayor Inmutable (Kardex Valorizado):** Registro append-only de cada movimiento con fecha, producto, tipo (Entrada/Salida), motivo, cantidad, costo unitario y saldo resultante en tiempo real.
+* **Algoritmo de Costo Promedio Ponderado (CPP/WAC):** Recálculo automático del costo unitario tras cada ingreso o compra para auditoría exacta del margen de ganancia.
 
-### 2. Architectural Design Decisions
+### 3. Caja POS, Turnos y Conciliación (`/pos`)
+* **Métricas de Terminal en Servicio:** Estado en vivo (*En Servicio* / *Cerrada*), efectivo estimado en gaveta, total de turnos auditados y terminales configurados.
+* **Apertura y Cierre Formal de Turnos:**
+  * Modal interactivo para registrar el fondo inicial en soles.
+  * Cierre de sesión con conteo físico de dinero en caja y cálculo automático de variaciones: **Exacto**, **Sobrante (+)** o **Faltante (-)**.
+* **Restricción Atómica en Base de Datos:** Índice único compuesto `UNIQUE(cash_register_id, open_flag)` que previene la apertura simultánea de turnos duplicados en el mismo terminal a nivel del motor relacional.
 
-#### A. Pessimistic Row-Level Locking (`lockForUpdate`)
+### 4. Tareas & Cronómetro Companion (`/tasks`)
+* **Drawer Deslizante Lateral:** Accesible con un clic desde cualquier ventana mediante el botón del timer superior o la barra de navegación.
+* **Cronómetro en Vivo:** Ticking en milisegundos con actualización del reloj global en la barra superior.
+* **Persistencia Reactiva:** El estado del cronómetro activo se guarda en `localStorage` permitiendo navegar entre páginas sin perder el conteo ni generar peticiones de red innecesarias.
+* **Puente a Facturación en 1 Clic:** Selecciona tareas completadas con tiempo acumulado y genera automáticamente un borrador de factura comercial listo para ser emitido.
 
-Sequential fiscal series allocation avoids race conditions using database-level row locking instead of volatile `MAX(number) + 1` queries:
+---
 
+## Decisiones de Arquitectura y Rendimiento
+
+### A. Navegación SPA Ultrarrápida (<50ms)
+Para eliminar la latencia de recargas de página en entornos contenedorizados:
+1. **Pre-calentamiento en Memoria (`warmNavigationCache`):** Al cargar la aplicación, se precargan silenciosamente en segundo plano las rutas principales (`/invoices`, `/inventory`, `/pos`).
+2. **Hover Prefetching:** Al pasar el cursor sobre cualquier enlace de la barra lateral, el contenido HTML se almacena en memoria antes del clic.
+3. **Intercambio Atómico de DOM:** El enrutador del cliente sustituye únicamente el contenedor de contenido principal (`.apex-content`), manteniendo la sesión y el reloj activo sin parpadeos.
+
+### B. Asignación Serializada de Correlativos (`lockForUpdate`)
+Para evitar colisiones de numeración fiscal entre terminales concurrentes:
 ```php
 $seriesRecord = DocumentSeries::where('branch_id', $branchId)
     ->where('doc_type', $docType)
@@ -38,71 +82,13 @@ $seriesRecord = DocumentSeries::where('branch_id', $branchId)
     ->first();
 ```
 
-Transactions queue at the relational engine level, guaranteeing zero skipped correlatives and strict serialized issuance.
-
-#### B. Immutable Kardex with Weighted Average Cost (WAC)
-
-Inventory management decouples current stock aggregates (`stocks`) from the append-only transaction ledger (`stock_movements`). Inbound shipments dynamically recalculate the weighted unit cost:
-
-$$\text{Unit Cost}_{\text{new}} = \frac{(\text{Stock}_{\text{prev}} \times \text{Cost}_{\text{prev}}) + (\text{Qty}_{\text{in}} \times \text{Cost}_{\text{in}})}{\text{Total Stock}_{\text{result}}}$$
-
-During invoice generation, an immutable unit cost snapshot is persisted within each document line item, guaranteeing exact historical profit margins even after subsequent cost fluctuations.
-
-#### C. Atomic Shift Management for POS Terminals
-
-Concurrent session conflicts on cash registers are mitigated at the database schema level using a compound unique index constraint:
-
-```sql
-UNIQUE(cash_register_id, open_flag)
-```
-
-During an active cashier shift, `open_flag = true`. Upon session reconciliation and closure, `open_flag` is updated to `NULL`. Relational engines allow multiple `NULL` instances in unique indices, preventing dual concurrent sessions while retaining historical closed session logs.
-
-#### D. Layered Domain Architecture
-
-Business logic is strictly decoupled from transport protocols:
-
-* **Form Requests:** Handle schema validation, type casting, authorization, and sanitization before request arrival at the domain layer.
-* **Domain Services:** Encapsulate database transactions (`DB::transaction`) with automatic rollbacks on domain violations (`BusinessException`).
-* **API Resources:** Ensure serialized, deterministic JSON responses and prevent over-fetching.
+### C. Desacoplamiento de Existencias y Libro Mayor
+La tabla `stocks` almacena el balance actual agregado por variante y almacén, mientras que `stock_movements` preserva la auditoría histórica inmutable:
+$$\text{Costo Unitario}_{\text{nuevo}} = \frac{(\text{Stock}_{\text{anterior}} \times \text{Costo}_{\text{anterior}}) + (\text{Cantidad}_{\text{ingreso}} \times \text{Costo}_{\text{compra}})}{\text{Stock}_{\text{resultante}}}$$
 
 ---
 
-## Project Structure
-
-```text
-├── app/
-│   ├── Enums/                 # Backed Enums (DocType, InvoiceStatus, PaymentCondition)
-│   ├── Exceptions/            # Centralized business error handling (BusinessException)
-│   ├── Http/
-│   │   ├── Controllers/       # REST API Controllers
-│   │   ├── Requests/          # Request validation rules (Form Requests)
-│   │   └── Resources/         # Response transformations (API Resources)
-│   ├── Models/                # Eloquent models with typed casts and relationships
-│   └── Services/              # Domain logic (InvoiceService, InventoryService, CashService, PdfService)
-├── bootstrap/
-│   └── app.php                # Application container & middleware pipeline
-├── database/
-│   ├── migrations/            # Relational schema migrations with foreign key constraints
-│   └── seeders/               # Standard enterprise seeding (Company, Catalogs, Series)
-├── docker/
-│   └── nginx/conf.d/app.conf  # Nginx reverse proxy configuration
-├── docs/
-│   └── er-diagram.md          # Entity-Relationship specifications
-├── resources/
-│   └── views/pdf/invoice.blade.php # Printable corporate tax invoice Blade template
-├── routes/
-│   ├── api.php                # REST API routes versioned under /api/v1
-│   ├── web.php                # Status & documentation health entry points
-│   └── console.php            # CLI commands
-├── composer.json              # Dependency manifests
-├── docker-compose.yml         # Containerized services (PHP-FPM, Nginx, PostgreSQL, Redis)
-└── Dockerfile                 # Alpine-based PHP 8.2 container build
-```
-
----
-
-## Entity-Relationship Model
+## Modelo Entidad-Relación (Base de Datos)
 
 ```mermaid
 erDiagram
@@ -112,7 +98,6 @@ erDiagram
     branches ||--o{ document_series : issues
     companies ||--o{ users : employs
     companies ||--o{ contacts : registers
-    contacts ||--o{ contact_addresses : has
     companies ||--o{ products : catalogs
     categories ||--o{ products : classifies
     units ||--o{ products : measures
@@ -122,106 +107,106 @@ erDiagram
     warehouses ||--o{ stocks : stores
     product_variants ||--o{ stock_movements : ledger
     warehouses ||--o{ stock_movements : ledger
-    contacts ||--o{ quotes : receives
-    quotes ||--|{ quote_items : details
-    quotes ||--o| invoices : converts_to
     contacts ||--o{ invoices : bills
     invoices ||--|{ invoice_items : details
     invoices ||--o{ invoice_payments : settles
-    invoices ||--o{ invoices : references_credit_note
-    product_variants ||--o{ invoice_items : sold_in
-    contacts ||--o{ purchases : supplies
-    purchases ||--|{ purchase_items : details
-    payment_methods ||--o{ invoice_payments : processed_via
     cash_registers ||--o{ cash_sessions : logs
     cash_sessions ||--o{ cash_movements : records
-    cash_sessions ||--o{ cash_session_counts : reconciles
-    cash_sessions ||--o{ invoice_payments : collects
-    payment_methods ||--o{ cash_movements : categorizes
+    tasks ||--o{ task_timers : tracks
 ```
 
 ---
 
-## API Reference (v1)
+## Catálogo de Endpoints y Rutas
 
-### Core Endpoints
+### Rutas Web (Interfaz de Usuario SPA)
 
-| Method | Endpoint | Description | Request Handler / Resource |
+| Método | Ruta | Descripción | Módulo |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/api/v1/health` | System health check and heartbeat | Status check closure |
-| `POST` | `/api/v1/invoices` | Creates an invoice in draft status | `StoreInvoiceRequest` ➔ `InvoiceResource` |
-| `POST` | `/api/v1/invoices/{id}/issue` | Atomically issues and numbers fiscal invoice | `IssueInvoiceRequest` ➔ `InvoiceResource` |
-| `POST` | `/api/v1/invoices/{id}/void` | Voids document and returns stock to warehouse | `VoidInvoiceRequest` ➔ `InvoiceResource` |
-| `GET` | `/api/v1/invoices/{id}/pdf` | Generates and streams printable fiscal PDF | Stream via `PdfService` |
-| `GET` | `/api/v1/kardex/{variantId}` | Retrieves auditable inventory movement ledger | `StockMovementResource` |
-| `POST` | `/api/v1/cash-sessions/open` | Opens a cashier shift on a terminal | `OpenCashSessionRequest` ➔ `CashSessionResource` |
-| `POST` | `/api/v1/cash-sessions/{id}/close` | Closes terminal session and records physical cash count | `CloseCashSessionRequest` ➔ `CashSessionResource` |
+| `GET` | `/invoices` | Dashboard principal de comprobantes con métricas y tabs de estado | Facturación |
+| `GET` | `/invoices/create` | Constructor interactivo de factura con cálculo de impuestos en vivo | Facturación |
+| `POST` | `/invoices` | Guarda borrador o emite comprobante fiscal atómicamente | Facturación |
+| `GET` | `/invoices/{id}` | Vista detallada del comprobante con opciones de cobro y anulación | Facturación |
+| `GET` | `/invoices/{id}/pdf` | Generación e impresión directa del comprobante A4 en PDF | Motor PDF |
+| `GET` | `/inventory` | Niveles multialmacén, alertas de stock mínimo y Kardex valorizado | Inventario |
+| `GET` | `/pos` | Terminal de caja, arqueo de fondos y auditoría de turnos cerrados | Caja POS |
+| `POST` | `/pos/open` | Abre formalmente un turno de caja con fondo inicial | Caja POS |
+| `POST` | `/pos/{id}/close`| Cierra turno con conteo físico y registro de descuadres | Caja POS |
+| `GET` | `/tasks` | Consulta de cronómetros activos y tareas recientes | Timer & Tareas |
+| `POST` | `/tasks` | Registra nueva tarea con horas o inicia cronómetro en vivo | Timer & Tareas |
+| `POST` | `/tasks/{id}/start-timer` | Inicia cronómetro en una tarea específica | Timer & Tareas |
+| `POST` | `/tasks/{id}/stop-timer` | Detiene cronómetro y acumula los segundos transcurridos | Timer & Tareas |
 
-### Web Application & Time Tracking Endpoints
+### Endpoints REST API (v1)
 
-| Method | Route | Description | Module |
+| Método | Endpoint | Descripción | Formato / Autenticación |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/invoices` | Interactive invoices dashboard with status tabs, metrics, and instant filters | Invoicing & Sales |
-| `GET` | `/invoices/create` | Modern New Invoice builder with client card, auto tax, and item table | Invoicing & Sales |
-| `POST` | `/invoices` | Saves draft or atomically issues fiscal invoice with `lockForUpdate` | Invoicing & Sales |
-| `GET` | `/invoices/{id}/pdf` | Generates and streams printable tax invoice A4 PDF | Fiscal PDF Engine |
-| `GET` | `/inventory` | Multi-warehouse stock levels, min stock alerts, and Kardex movements | Inventory & Kardex |
-| `GET` | `/pos` | Cash register shift terminal, opening/closing counts, and cash variance audit | POS & Cash Shifts |
-| `GET` | `/tasks` | Retrieves active stopwatch status and recent timer entries | Time & Task Tracking |
-| `POST` | `/tasks` | Registers new tasks with hours or starts live stopwatch timer | Time & Task Tracking |
-| `POST` | `/tasks/{id}/start-timer` | Starts live stopwatch timer on an existing task | Time & Task Tracking |
-| `POST` | `/tasks/{id}/stop-timer` | Pauses/stops running stopwatch and increments accumulated seconds | Time & Task Tracking |
-| `POST` | `/tasks/convert-to-invoice` | Converts tracked billable hours directly into a legal Invoice draft | Billing Bridge |
+| `GET` | `/api/v1/health` | Verificación de latencia y disponibilidad de servicios | JSON (`HealthController`) |
+| `POST` | `/api/v1/invoices` | Creación de comprobante en borrador vía API | `StoreInvoiceRequest` ➔ JSON |
+| `POST` | `/api/v1/invoices/{id}/issue` | Emisión fiscal atómica con asignación de correlativo | `lockForUpdate` ➔ JSON |
+| `POST` | `/api/v1/invoices/{id}/void` | Anulación formal y restitución inmediata de existencias | Transacción Atómica |
+| `GET` | `/api/v1/invoices/{id}/pdf` | Descarga de comprobante oficial en formato PDF | Binary Stream |
+| `GET` | `/api/v1/kardex/{variantId}` | Consulta programática del libro mayor de movimientos | `StockMovementResource` |
+| `POST` | `/api/v1/cash-sessions/open` | Apertura de turno en terminal de punto de venta | Compound Unique Check |
+| `POST` | `/api/v1/cash-sessions/{id}/close` | Conciliación de arqueo físico y reporte de descuadre | `CashSessionResource` |
 
 ---
 
-## Local Deployment with Docker
+## Despliegue Local con Docker
 
-### Prerequisites
+### Requisitos Previos
 * Docker Engine 24+ & Docker Compose v2+
 * Git
 
-### Step-by-Step Installation
+### Pasos de Instalación
 
-1. **Clone the repository:**
+1. **Clonar el repositorio:**
    ```bash
    git clone https://github.com/maurz-dev/enterprise-billing-system.git
    cd enterprise-billing-system
    ```
 
-2. **Configure environment variables:**
+2. **Configurar el archivo de entorno:**
    ```bash
    cp .env.example .env
    ```
 
-3. **Build and launch containers:**
+3. **Compilar y levantar los contenedores:**
    ```bash
    docker compose up -d --build
    ```
 
-4. **Initialize database schema and test seeds:**
+4. **Ejecutar migraciones y datos de prueba:**
    ```bash
    docker compose exec app php artisan migrate:fresh --seed
    ```
 
-5. **Verify deployment:**
-   Access the health endpoint at [http://localhost:8080/api/v1/health](http://localhost:8080/api/v1/health).
+5. **Optimizar cachés de producción:**
+   ```bash
+   docker compose exec app php artisan config:cache
+   docker compose exec app php artisan route:cache
+   docker compose exec app php artisan view:cache
+   ```
+
+6. **Acceder a la aplicación:**
+   * **Dashboard Web:** [http://localhost:8080/invoices](http://localhost:8080/invoices)
+   * **Kardex & Stock:** [http://localhost:8080/inventory](http://localhost:8080/inventory)
+   * **Caja POS:** [http://localhost:8080/pos](http://localhost:8080/pos)
+   * **Health Check API:** [http://localhost:8080/api/v1/health](http://localhost:8080/api/v1/health)
 
 ---
 
-## Service Port Allocations
+## Mapeo de Puertos y Servicios
 
-| Service | Internal Port | Host Port | Description |
-| :--- | :--- | :--- | :--- |
-| **Web Server (Nginx)** | `80` | `8080` | HTTP Gateway & API Router |
-| **Application (PHP-FPM)** | `9000` | — | Core Business Logic Engine |
-| **Database (PostgreSQL)** | `5432` | `5433` | Primary Relational Persistence |
-| **Cache & Queues (Redis)** | `6379` | `6379` | In-Memory Key-Value Store |
+| Contenedor | Servicio | Puerto Interno | Puerto Host | Propósito |
+| :--- | :--- | :--- | :--- | :--- |
+| `billing_webserver` | Nginx (Alpine) | `80` | `8080` | Gateway HTTP, Proxy Inverso y Entrega de Assets |
+| `billing_app` | PHP-FPM (8.2) | `9000` | — | Procesamiento de Lógica de Negocio y Dominio |
+| `billing_postgres` | PostgreSQL 15 | `5432` | `5433` | Base de Datos Relacional Principal con Restricciones ACID |
+| `billing_redis` | Redis (Alpine) | `6379` | `6379` | Caché en Memoria y Manejo de Colas Asíncronas |
 
 ---
 
-## Author & Maintainers
+## Licencia
 
-Maintained by **Maurice Chavez ([@maurz-dev](https://github.com/maurz-dev))**.
-
-Distributed under the [MIT License](LICENSE).
+Distribuido bajo la [Licencia MIT](LICENSE). Desarrollado y mantenido de manera independiente para sistemas de gestión comercial y facturación electrónica.

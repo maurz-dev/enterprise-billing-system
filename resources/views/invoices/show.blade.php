@@ -54,7 +54,7 @@
             @endif
 
             <a href="{{ route('invoices.create') }}" class="btn btn-outline-primary">
-                <span data-i18n="btn_new_invoice">+ Nueva Factura</span>
+                <span data-i18n="btn_new_invoice">Nueva Factura</span>
             </a>
         </div>
     </div>
