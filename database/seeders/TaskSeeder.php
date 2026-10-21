@@ -98,7 +98,7 @@ class TaskSeeder extends Seeder
             'contact_id' => $client?->id,
             'user_id' => $user->id,
             'title' => 'Design new client dashboard',
-            'description' => 'Prototipado de panel de control con métricas en tiempo real y estética Crater.',
+            'description' => 'Prototipado de panel de control con métricas en tiempo real y estética FinTech.',
             'status' => 'logged',
             'is_billable' => true,
             'hourly_rate' => 70.00,

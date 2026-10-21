@@ -1,17 +1,17 @@
-<?php $__env->startSection('title', 'Nueva Factura - Crater Invoice Style'); ?>
+<?php $__env->startSection('title', 'Nueva Factura'); ?>
 
 <?php $__env->startSection('content'); ?>
-<div class="crater-invoice-container">
-    <!-- Header: Title, Breadcrumbs, Action Buttons (Image 2) -->
+<div class="apex-invoice-container">
+    <!-- Header: Title, Breadcrumbs, Action Buttons -->
     <div class="invoice-header-row">
         <div>
-            <h1 class="invoice-title">New invoice</h1>
-            <nav class="crater-breadcrumbs">
+            <h1 class="invoice-title" data-i18n="new_invoice_title">Nueva Factura</h1>
+            <nav class="apex-breadcrumbs">
                 <a href="<?php echo e(route('invoices.index')); ?>">Home</a>
                 <span class="bc-sep">/</span>
-                <a href="<?php echo e(route('invoices.index')); ?>">Invoices</a>
+                <a href="<?php echo e(route('invoices.index')); ?>" data-i18n="invoices_title">Facturación</a>
                 <span class="bc-sep">/</span>
-                <span class="bc-current">New Invoice</span>
+                <span class="bc-current" data-i18n="new_invoice_title">Nueva Factura</span>
             </nav>
         </div>
 
@@ -22,25 +22,25 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                 </svg>
-                <span>Download PDF</span>
+                <span data-i18n="download_pdf">Descargar PDF</span>
             </button>
 
-            <!-- Save as Draft (Crater purple button) -->
+            <!-- Save as Draft -->
             <button type="button" class="btn btn-primary" onclick="submitInvoiceForm('save_draft')" id="btnSaveInvoice">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                 </svg>
-                <span>Save Invoice</span>
+                <span data-i18n="save_draft">Guardar Borrador</span>
             </button>
 
             <!-- Issue Immediately Button -->
-            <button type="button" class="btn btn-outline-purple" onclick="submitInvoiceForm('issue')" title="Emitir con asignación atómica de serie y correlativo">
+            <button type="button" class="btn btn-outline-primary" onclick="submitInvoiceForm('issue')" title="Emitir con asignación atómica de serie y correlativo">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>Emitir Fiscalmente</span>
+                <span data-i18n="issue_fiscal">Emitir Fiscalmente</span>
             </button>
         </div>
     </div>
@@ -48,10 +48,10 @@
     <?php if(!empty($selectedTaskIds)): ?>
         <div class="task-import-banner">
             <div style="display: flex; align-items: center; gap: 10px;">
-                <span class="badge-ninja">Invoice Ninja</span>
+                <span class="badge-tasks">Control de Tareas</span>
                 <span>Se han importado <strong><?php echo e(count($selectedTaskIds)); ?> tareas registradas</strong> como líneas facturables para este comprobante.</span>
             </div>
-            <button type="button" class="btn-text" onclick="this.parentElement.remove()" style="color: #6c5ce7; font-weight: 700;">Entendido</button>
+            <button type="button" class="btn-text" onclick="this.parentElement.remove()" style="color: var(--primary); font-weight: 700;">Entendido</button>
         </div>
     <?php endif; ?>
 
@@ -63,25 +63,25 @@
         <input type="hidden" name="warehouse_id" value="<?php echo e($warehouses->first()->id ?? 1); ?>">
         <input type="hidden" name="task_ids" value="<?php echo e(implode(',', $selectedTaskIds)); ?>">
 
-        <!-- Top Metadata Cards: Customer + Dates & Series (Image 2) -->
+        <!-- Top Metadata Cards: Customer + Dates & Series -->
         <div class="invoice-meta-grid">
-            <!-- Customer Card: "Add a customer" (Image 2) -->
-            <div class="crater-card customer-card">
+            <!-- Customer Card -->
+            <div class="apex-card customer-card">
                 <div class="card-title-row">
-                    <label class="crater-label">Cliente / Receptor</label>
-                    <a href="javascript:void(0)" onclick="quickSelectFirstClient()" class="quick-link">Usar cliente demo</a>
+                    <label class="apex-label" data-i18n="customer_receiver">Cliente / Receptor</label>
+                    <a href="javascript:void(0)" onclick="quickSelectFirstClient()" class="quick-link" data-i18n="use_demo_customer">Usar cliente demo</a>
                 </div>
 
                 <div class="customer-picker-area">
                     <div class="customer-avatar-box" id="custAvatarBox">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6c5ce7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                             <circle cx="12" cy="7" r="4"></circle>
                         </svg>
                     </div>
 
                     <div style="flex: 1;">
-                        <select name="contact_id" id="contactSelect" class="crater-select" required onchange="handleCustomerChange(this)">
+                        <select name="contact_id" id="contactSelect" class="apex-select" required onchange="handleCustomerChange(this)">
                             <option value="">Selecciona o añade un cliente...</option>
                             <?php $__currentLoopData = $customers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $c): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($c->id); ?>" 
@@ -103,13 +103,13 @@
                 </div>
             </div>
 
-            <!-- Invoice Parameters Card: Dates, Series, DocType (Image 2) -->
-            <div class="crater-card params-card">
+            <!-- Invoice Parameters Card: Dates, Series, DocType -->
+            <div class="apex-card params-card">
                 <div class="params-grid">
                     <!-- Doc Type -->
                     <div class="form-field">
-                        <label class="crater-label">Tipo de Comprobante</label>
-                        <select name="doc_type" id="docTypeSelect" class="crater-input" onchange="updateSeriesList()">
+                        <label class="apex-label" data-i18n="doc_type_label">Tipo de Comprobante</label>
+                        <select name="doc_type" id="docTypeSelect" class="apex-input" onchange="updateSeriesList()">
                             <option value="01">01 - Factura Electrónica</option>
                             <option value="03">03 - Boleta de Venta</option>
                         </select>
@@ -117,8 +117,8 @@
 
                     <!-- Series -->
                     <div class="form-field">
-                        <label class="crater-label">Serie Fiscal (lockForUpdate)</label>
-                        <select name="series" id="seriesSelect" class="crater-input" required>
+                        <label class="apex-label" data-i18n="series_label">Serie Fiscal (lockForUpdate)</label>
+                        <select name="series" id="seriesSelect" class="apex-input" required>
                             <?php $__currentLoopData = $series; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $s): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                 <option value="<?php echo e($s->series); ?>" data-type="<?php echo e($s->doc_type); ?>">
                                     <?php echo e($s->series); ?> (Correlativo actual: <?php echo e($s->current_number); ?>)
@@ -132,20 +132,20 @@
 
                     <!-- Invoice Date -->
                     <div class="form-field">
-                        <label class="crater-label">Invoice Date</label>
-                        <input type="date" name="issue_date" id="issueDate" class="crater-input" value="<?php echo e(date('Y-m-d')); ?>" required>
+                        <label class="apex-label" data-i18n="th_issue_date">Fecha Emisión</label>
+                        <input type="date" name="issue_date" id="issueDate" class="apex-input" value="<?php echo e(date('Y-m-d')); ?>" required>
                     </div>
 
                     <!-- Due Date -->
                     <div class="form-field">
-                        <label class="crater-label">Due Date</label>
-                        <input type="date" name="due_date" id="dueDate" class="crater-input" value="<?php echo e(date('Y-m-d', strtotime('+15 days'))); ?>" required>
+                        <label class="apex-label" data-i18n="th_due_date">Vencimiento</label>
+                        <input type="date" name="due_date" id="dueDate" class="apex-input" value="<?php echo e(date('Y-m-d', strtotime('+15 days'))); ?>" required>
                     </div>
 
                     <!-- Currency -->
                     <div class="form-field">
-                        <label class="crater-label">Moneda</label>
-                        <select name="currency" id="currencySelect" class="crater-input" onchange="updateCurrencySymbols()">
+                        <label class="apex-label" data-i18n="currency_label">Moneda</label>
+                        <select name="currency" id="currencySelect" class="apex-input" onchange="updateCurrencySymbols()">
                             <option value="PEN">PEN (S/ Nuevos Soles)</option>
                             <option value="USD">USD ($ Dólares Americanos)</option>
                         </select>
@@ -153,32 +153,32 @@
 
                     <!-- Payment Condition -->
                     <div class="form-field">
-                        <label class="crater-label">Condición de Pago</label>
-                        <select name="payment_condition" class="crater-input">
-                            <option value="cash">Al Contado (Inmediato)</option>
-                            <option value="credit">Al Crédito (15 días)</option>
+                        <label class="apex-label" data-i18n="payment_condition_label">Condición de Pago</label>
+                        <select name="payment_condition" class="apex-input">
+                            <option value="cash" data-i18n="cash_label">Al Contado (Inmediato)</option>
+                            <option value="credit" data-i18n="credit_label">Al Crédito (15 días)</option>
                         </select>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Items Table Card (Image 2 replica) -->
-        <div class="crater-card items-card">
+        <!-- Items Table Card -->
+        <div class="apex-card items-card">
             <div class="items-card-header">
-                <h3>Detalle de Líneas y Productos</h3>
-                <span class="text-hint">Selecciona ítems del catálogo o ingresa descripciones libres</span>
+                <h3 data-i18n="line_items_title">Detalle de Líneas y Productos</h3>
+                <span class="text-hint" data-i18n="line_items_subtitle">Selecciona ítems del catálogo o ingresa descripciones libres</span>
             </div>
 
             <div class="table-responsive">
-                <table class="crater-table" id="itemsTable">
+                <table class="apex-table" id="itemsTable">
                     <thead>
                         <tr>
-                            <th style="width: 44%;">Items</th>
-                            <th style="width: 12%; text-align: center;">Quantity</th>
-                            <th style="width: 16%; text-align: right;">Price</th>
+                            <th style="width: 44%;">Ítems / Descripción</th>
+                            <th style="width: 12%; text-align: center;">Cantidad</th>
+                            <th style="width: 16%; text-align: right;">Precio</th>
                             <th style="width: 12%; text-align: center;">IGV / Tax</th>
-                            <th style="width: 14%; text-align: right;">Amount</th>
+                            <th style="width: 14%; text-align: right;">Total</th>
                             <th style="width: 2%;"></th>
                         </tr>
                     </thead>
@@ -188,7 +188,7 @@
                 </table>
             </div>
 
-            <!-- Add Item Button (Image 2) -->
+            <!-- Add Item Button -->
             <div class="add-item-bar">
                 <button type="button" class="btn-add-item" onclick="addItemRow()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -196,28 +196,28 @@
                         <line x1="12" y1="8" x2="12" y2="16"></line>
                         <line x1="8" y1="12" x2="16" y2="12"></line>
                     </svg>
-                    <span>+ Add an item</span>
+                    <span data-i18n="add_item">+ Añadir Ítem</span>
                 </button>
             </div>
 
-            <!-- Summary & Calculations (Image 2) -->
+            <!-- Summary & Calculations -->
             <div class="invoice-summary-box">
                 <div class="notes-box">
-                    <label class="crater-label">Notas & Términos Fiscales</label>
-                    <textarea name="notes" class="crater-textarea" rows="3" placeholder="Información de transferencia bancaria, número de pedido o condiciones de entrega..."></textarea>
+                    <label class="apex-label" data-i18n="notes_label">Notas & Términos Fiscales</label>
+                    <textarea name="notes" class="apex-textarea" rows="3" placeholder="Información de transferencia bancaria, número de pedido o condiciones de entrega..."></textarea>
                 </div>
 
                 <div class="totals-table-box">
                     <div class="totals-row">
-                        <span class="tot-label">Subtotal</span>
+                        <span class="tot-label" data-i18n="subtotal">Subtotal</span>
                         <span class="tot-value" id="subtotalDisplay">S/ 0.00</span>
                     </div>
                     <div class="totals-row">
-                        <span class="tot-label">IGV (18.00%)</span>
+                        <span class="tot-label" data-i18n="tax_igv">IGV (18.00%)</span>
                         <span class="tot-value" id="taxDisplay">S/ 0.00</span>
                     </div>
                     <div class="totals-row totals-grand">
-                        <span class="tot-label">Total</span>
+                        <span class="tot-label" data-i18n="grand_total">Total</span>
                         <span class="tot-value" id="grandTotalDisplay">S/ 0.00</span>
                     </div>
                 </div>
@@ -233,7 +233,7 @@
 </script>
 
 <style>
-    .crater-invoice-container {
+    .apex-invoice-container {
         max-width: 1200px;
         margin: 0 auto;
         display: flex;
@@ -254,10 +254,10 @@
         font-size: 1.85rem;
         font-weight: 800;
         letter-spacing: -0.03em;
-        color: #0f172a;
+        color: var(--text-main);
     }
 
-    .crater-breadcrumbs {
+    .apex-breadcrumbs {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -267,21 +267,21 @@
         margin-top: 4px;
     }
 
-    .crater-breadcrumbs a {
+    .apex-breadcrumbs a {
         color: var(--text-muted);
         text-decoration: none;
     }
 
-    .crater-breadcrumbs a:hover {
-        color: var(--crater-purple);
+    .apex-breadcrumbs a:hover {
+        color: var(--primary);
     }
 
     .bc-sep {
-        color: #cbd5e1;
+        color: var(--text-light);
     }
 
     .bc-current {
-        color: var(--crater-purple);
+        color: var(--primary);
         font-weight: 700;
     }
 
@@ -293,9 +293,9 @@
 
     /* Task import banner */
     .task-import-banner {
-        background: #f5f3ff;
-        border: 1px solid #ddd6fe;
-        color: #5b21b6;
+        background: var(--primary-light, #eff6ff);
+        border: 1px solid var(--border-focus, #93c5fd);
+        color: var(--primary, #2563eb);
         padding: 12px 20px;
         border-radius: var(--radius-sm);
         display: flex;
@@ -304,8 +304,8 @@
         font-size: 0.9rem;
     }
 
-    .badge-ninja {
-        background: #0284c7;
+    .badge-tasks {
+        background: var(--primary);
         color: white;
         font-size: 0.72rem;
         font-weight: 800;
@@ -327,11 +327,11 @@
         }
     }
 
-    .crater-label {
+    .apex-label {
         display: block;
         font-size: 0.82rem;
         font-weight: 700;
-        color: #475569;
+        color: var(--text-muted);
         margin-bottom: 6px;
     }
 
@@ -345,7 +345,7 @@
     .quick-link {
         font-size: 0.78rem;
         font-weight: 700;
-        color: var(--crater-purple);
+        color: var(--primary);
         text-decoration: none;
     }
 
@@ -362,8 +362,8 @@
     .customer-avatar-box {
         width: 48px;
         height: 48px;
-        background: #f5f3ff;
-        border: 1.5px dashed #c4b5fd;
+        background: var(--primary-light, #eff6ff);
+        border: 1.5px dashed var(--border-focus, #93c5fd);
         border-radius: 12px;
         display: flex;
         align-items: center;
@@ -371,45 +371,45 @@
         flex-shrink: 0;
     }
 
-    .crater-select, .crater-input, .crater-textarea {
+    .apex-select, .apex-input, .apex-textarea {
         width: 100%;
         padding: 10px 14px;
         border: 1.5px solid var(--border);
         border-radius: var(--radius-sm);
         font-family: inherit;
         font-size: 0.9rem;
-        color: #0f172a;
-        background: #ffffff;
+        color: var(--text-main);
+        background: var(--surface, #ffffff);
         outline: none;
         transition: var(--transition);
     }
 
-    .crater-select:focus, .crater-input:focus, .crater-textarea:focus {
-        border-color: var(--crater-purple);
-        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.15);
+    .apex-select:focus, .apex-input:focus, .apex-textarea:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px var(--primary-glow);
     }
 
     .customer-preview {
         margin-top: 12px;
         padding: 12px;
-        background: #f8fafc;
+        background: var(--surface-subtle, #f8fafc);
         border-radius: 8px;
         font-size: 0.82rem;
     }
 
     .cust-name {
         font-weight: 700;
-        color: #1e293b;
+        color: var(--text-main);
     }
 
     .cust-doc {
-        color: #64748b;
+        color: var(--text-muted);
         font-family: 'JetBrains Mono', monospace;
         margin: 2px 0;
     }
 
     .cust-addr {
-        color: #94a3b8;
+        color: var(--text-light);
     }
 
     /* Params Grid */
@@ -431,7 +431,7 @@
     .items-card-header h3 {
         font-size: 1.15rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text-main);
     }
 
     .text-hint {
@@ -443,13 +443,13 @@
         overflow-x: auto;
     }
 
-    .crater-table {
+    .apex-table {
         width: 100%;
         border-collapse: separate;
         border-spacing: 0 8px;
     }
 
-    .crater-table th {
+    .apex-table th {
         font-size: 0.78rem;
         font-weight: 700;
         text-transform: uppercase;
@@ -459,7 +459,7 @@
         border-bottom: 1.5px solid var(--border);
     }
 
-    .crater-table td {
+    .apex-table td {
         padding: 8px 6px;
         vertical-align: top;
     }
@@ -470,11 +470,13 @@
         border: 1.5px solid var(--border);
         border-radius: var(--radius-sm);
         font-size: 0.9rem;
+        background: var(--surface, #ffffff);
+        color: var(--text-main);
         outline: none;
     }
 
     .item-desc-input:focus {
-        border-color: var(--crater-purple);
+        border-color: var(--primary);
     }
 
     .item-num-input {
@@ -485,11 +487,13 @@
         font-size: 0.9rem;
         font-family: 'JetBrains Mono', monospace;
         text-align: right;
+        background: var(--surface, #ffffff);
+        color: var(--text-main);
         outline: none;
     }
 
     .item-num-input:focus {
-        border-color: var(--crater-purple);
+        border-color: var(--primary);
     }
 
     .item-amount-display {
@@ -499,13 +503,13 @@
         font-size: 0.95rem;
         font-weight: 700;
         text-align: right;
-        color: #0f172a;
+        color: var(--text-main);
     }
 
     .btn-delete-item {
         background: none;
         border: none;
-        color: #cbd5e1;
+        color: var(--text-light);
         cursor: pointer;
         padding: 10px 6px;
         display: flex;
@@ -515,7 +519,7 @@
     }
 
     .btn-delete-item:hover {
-        color: #ef4444;
+        color: var(--danger);
     }
 
     /* Add Item Bar */
@@ -530,8 +534,8 @@
         align-items: center;
         gap: 8px;
         background: transparent;
-        color: var(--crater-purple);
-        border: 1.5px dashed var(--crater-purple);
+        color: var(--primary);
+        border: 1.5px dashed var(--primary);
         padding: 10px 20px;
         border-radius: var(--radius-sm);
         font-size: 0.9rem;
@@ -541,7 +545,7 @@
     }
 
     .btn-add-item:hover {
-        background: #f5f3ff;
+        background: var(--primary-light, #eff6ff);
         transform: translateY(-1px);
     }
 
@@ -559,7 +563,7 @@
     }
 
     .totals-table-box {
-        background: #f8fafc;
+        background: var(--surface-subtle, #f8fafc);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         padding: 20px 24px;
@@ -573,25 +577,25 @@
         align-items: center;
         justify-content: space-between;
         font-size: 0.92rem;
-        color: #475569;
+        color: var(--text-muted);
     }
 
     .tot-value {
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--text-main);
     }
 
     .totals-grand {
-        border-top: 2px dashed #cbd5e1;
+        border-top: 2px dashed var(--border);
         padding-top: 14px;
         font-size: 1.25rem;
         font-weight: 800;
-        color: #1e1b4b;
+        color: var(--text-main);
     }
 
     .totals-grand .tot-value {
-        color: var(--crater-purple);
+        color: var(--primary);
         font-size: 1.35rem;
     }
 </style>
@@ -664,7 +668,7 @@
         tr.innerHTML = `
             <td>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
-                    <select class="crater-select" style="font-size: 0.82rem; padding: 6px 10px;" onchange="selectCatalogVariant(${idx}, this)">
+                    <select class="apex-select" style="font-size: 0.82rem; padding: 6px 10px;" onchange="selectCatalogVariant(${idx}, this)">
                         <option value="">-- O elige del catálogo de productos --</option>
                         ${catalogVariants.map(v => `<option value="${v.id}" data-price="${v.price}" data-tax="${v.tax_rate}">${v.name} (${currencySymbol}${v.price.toFixed(2)})</option>`).join('')}
                     </select>
@@ -789,7 +793,7 @@
         handleCustomerChange(document.getElementById('contactSelect'));
         updateSeriesList();
 
-        // Load preloaded items if from Invoice Ninja
+        // Load preloaded items
         if (preloadedItems && preloadedItems.length > 0) {
             preloadedItems.forEach(item => addItemRow(item));
         } else {

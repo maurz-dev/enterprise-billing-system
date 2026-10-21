@@ -1,24 +1,29 @@
-<!-- Invoice Ninja: Tasks & Time Tracker Slide-over Drawer (Image 1) -->
-<div id="ninjaDrawerOverlay" class="ninja-drawer-overlay" onclick="toggleTimerDrawer()"></div>
+<!-- Task & Time Tracker Slide-over Drawer -->
+<div id="timerDrawerOverlay" class="timer-drawer-overlay" onclick="toggleTimerDrawer()"></div>
 
-<div id="ninjaDrawer" class="ninja-drawer" aria-labelledby="ninjaDrawerTitle" role="dialog" aria-modal="true">
-    <!-- Header: Avatar, Analytics, Icons -->
-    <div class="ninja-header">
-        <div class="ninja-header-left">
-            <div class="ninja-avatar">N</div>
-            <div class="ninja-header-info">
-                <span class="ninja-title" id="ninjaDrawerTitle">Invoice Ninja: Tasks</span>
-                <span class="ninja-subtitle">Chrome Extension v2 • Companion</span>
+<div id="timerDrawer" class="timer-drawer" aria-labelledby="timerDrawerTitle" role="dialog" aria-modal="true">
+    <!-- Header: Avatar, Info, Icons -->
+    <div class="timer-header">
+        <div class="timer-header-left">
+            <div class="timer-avatar">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+            </div>
+            <div class="timer-header-info">
+                <span class="timer-title" id="timerDrawerTitle" data-i18n="timer_title">Control de Tareas & Tiempo</span>
+                <span class="timer-subtitle" data-i18n="timer_subtitle">Módulo Integrado • Facturación</span>
             </div>
         </div>
-        <div class="ninja-header-actions">
-            <button type="button" class="ninja-icon-btn" title="Buscar tareas" onclick="document.getElementById('taskDescInput').focus()">
+        <div class="timer-header-actions">
+            <button type="button" class="timer-icon-btn" title="Buscar tareas" onclick="document.getElementById('taskDescInput').focus()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </button>
-            <button type="button" class="ninja-icon-btn" title="Cerrar panel" onclick="toggleTimerDrawer()">
+            <button type="button" class="timer-icon-btn" title="Cerrar panel" onclick="toggleTimerDrawer()">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -32,7 +37,7 @@
         <div class="stopwatch-details">
             <span class="pulse-indicator"></span>
             <div>
-                <div class="stopwatch-task-title" id="activeTaskTitle">Self-serve billing upgrade</div>
+                <div class="stopwatch-task-title" id="activeTaskTitle">Tarea activa</div>
                 <div class="stopwatch-counter" id="activeCounter">00:00:00</div>
             </div>
         </div>
@@ -40,14 +45,14 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
                 <rect x="6" y="6" width="12" height="12" rx="2"></rect>
             </svg>
-            <span>Detener</span>
+            <span data-i18n="stop_timer">Detener</span>
         </button>
     </div>
 
-    <!-- Start a timer Section (Image 1 layout) -->
-    <div class="ninja-body">
+    <!-- Start a timer Section -->
+    <div class="timer-body">
         <div class="start-timer-header">
-            <h3>Start a timer</h3>
+            <h3 data-i18n="start_timer">Iniciar Registro</h3>
             <div class="timer-control-buttons">
                 <!-- Checkmark action (Save/Create Task) -->
                 <button type="button" class="btn-circle btn-circle-check" id="btnSaveTaskManual" onclick="saveTaskManual()" title="Guardar registro de tarea">
@@ -65,79 +70,79 @@
             </div>
         </div>
 
-        <!-- Form Elements matching Image 1 -->
-        <div class="ninja-form">
+        <!-- Form Elements -->
+        <div class="timer-form">
             <!-- Date Picker -->
             <div class="form-group">
-                <label for="taskDate">Date</label>
+                <label for="taskDate" data-i18n="date">Fecha</label>
                 <div class="input-with-icon">
-                    <input type="date" id="taskDate" class="ninja-input" value="{{ date('Y-m-d') }}">
+                    <input type="date" id="taskDate" class="timer-input" value="{{ date('Y-m-d') }}">
                 </div>
             </div>
 
             <!-- Start & end vs. Hours Mode Selector -->
             <div class="mode-toggle-group">
-                <button type="button" class="mode-toggle-btn" id="modeStartEnd" onclick="setTimerMode('range')">Start & end</button>
-                <button type="button" class="mode-toggle-btn active" id="modeHours" onclick="setTimerMode('hours')">Hours</button>
+                <button type="button" class="mode-toggle-btn" id="modeStartEnd" onclick="setTimerMode('range')" data-i18n="start_and_end">Inicio & Fin</button>
+                <button type="button" class="mode-toggle-btn active" id="modeHours" onclick="setTimerMode('hours')" data-i18n="hours_mode">Horas</button>
             </div>
 
             <!-- Hours Input -->
             <div class="form-group" id="hoursGroup">
-                <label for="taskHours">Hours</label>
-                <input type="number" step="0.1" min="0" id="taskHours" class="ninja-input" placeholder="1" value="1.0">
-                <small class="ninja-hint">For example, enter 1.5 for 1 hour 30 minutes.</small>
+                <label for="taskHours" data-i18n="hours">Horas</label>
+                <input type="number" step="0.1" min="0" id="taskHours" class="timer-input" placeholder="1" value="1.0">
+                <small class="timer-hint" data-i18n="hours_hint">Ejemplo: ingresa 1.5 para 1 hora 30 minutos.</small>
             </div>
 
             <!-- Start & End inputs (Shown when mode is range) -->
             <div class="form-group" id="rangeGroup" style="display: none;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div>
-                        <label for="startTime">Start</label>
-                        <input type="time" id="startTime" class="ninja-input" value="09:00">
+                        <label for="startTime" data-i18n="start">Inicio</label>
+                        <input type="time" id="startTime" class="timer-input" value="09:00">
                     </div>
                     <div>
-                        <label for="endTime">End</label>
-                        <input type="time" id="endTime" class="ninja-input" value="10:30">
+                        <label for="endTime" data-i18n="end">Fin</label>
+                        <input type="time" id="endTime" class="timer-input" value="10:30">
                     </div>
                 </div>
             </div>
 
             <!-- Task Description -->
             <div class="form-group">
-                <input type="text" id="taskDescInput" class="ninja-input ninja-input-desc" placeholder="Add task description...">
+                <input type="text" id="taskDescInput" class="timer-input timer-input-desc" placeholder="Descripción de la tarea...">
             </div>
 
             <!-- Metadata Pills: Client, Project, Assignee, Status -->
-            <div class="ninja-pills-row">
+            <div class="timer-pills-row">
                 <div class="pill-dropdown-wrapper">
-                    <select id="taskClientSelect" class="ninja-pill-select" title="Seleccionar Cliente">
-                        <option value="">👤 Client</option>
+                    <select id="taskClientSelect" class="timer-pill-select" title="Seleccionar Cliente">
+                        <option value="" data-i18n="select_client">👤 Cliente</option>
                     </select>
                 </div>
 
                 <div class="pill-dropdown-wrapper">
-                    <select id="taskProjectSelect" class="ninja-pill-select" title="Seleccionar Proyecto">
-                        <option value="">📁 Project</option>
+                    <select id="taskProjectSelect" class="timer-pill-select" title="Seleccionar Proyecto">
+                        <option value="" data-i18n="select_project">📁 Proyecto</option>
                     </select>
                 </div>
 
                 <div class="pill-badge" title="Asignado a">
-                    <span>DB</span> Assignee
+                    <span>DB</span> <span data-i18n="assignee">Asignado</span>
                 </div>
 
-                <div class="pill-badge status-logged" id="taskStatusPill" title="Estado">
-                    Status
+                <div class="pill-badge status-logged" id="taskStatusPill" title="Estado" data-i18n="status">
+                    Estado
                 </div>
             </div>
         </div>
 
-        <hr class="ninja-divider">
+        <hr class="timer-divider">
 
-        <!-- Recent Timers Section (Image 1) -->
+        <!-- Recent Timers Section -->
         <div class="recent-timers-section">
             <div class="recent-header">
-                <h4>Recent</h4>
-                <button type="button" class="btn-text-purple" onclick="refreshTasksList()">Actualizar</button>
+                <h4 data-i18n="recent">Recientes</h4>
+                <button type="button" class="btn-text-primary" onclick="refreshTasksList()" data-i18n="refresh">Actualizar</button>
             </div>
 
             <div class="recent-list" id="recentTasksList">
@@ -147,36 +152,36 @@
         </div>
     </div>
 
-    <!-- Bottom Actions: Convert to Crater Invoice & Tabs (Image 1) -->
-    <div class="ninja-footer">
-        <!-- Billing Integration Button (Bridge to Crater) -->
+    <!-- Bottom Actions: Convert to Invoice & Tabs -->
+    <div class="timer-footer">
+        <!-- Billing Integration Button -->
         <div class="invoice-bridge-box">
-            <button type="button" class="btn-bridge-crater" onclick="convertSelectedTasksToInvoice()" id="btnInvoiceTasks">
+            <button type="button" class="btn-bridge-invoice" onclick="convertSelectedTasksToInvoice()" id="btnInvoiceTasks">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                     <line x1="12" y1="18" x2="12" y2="12"></line>
                     <line x1="9" y1="15" x2="15" y2="15"></line>
                 </svg>
-                <span>Facturar Tareas a Factura Crater</span>
+                <span data-i18n="bill_tasks">Facturar Tareas Seleccionadas</span>
             </button>
         </div>
 
-        <!-- Today & History Tabs (Image 1) -->
-        <div class="ninja-tabs">
-            <button type="button" class="ninja-tab active" id="tabToday" onclick="switchNinjaTab('today')">
+        <!-- Today & History Tabs -->
+        <div class="timer-tabs">
+            <button type="button" class="timer-tab active" id="tabToday" onclick="switchTimerTab('today')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>Today</span>
+                <span data-i18n="today">Hoy</span>
             </button>
-            <button type="button" class="ninja-tab" id="tabHistory" onclick="switchNinjaTab('history')">
+            <button type="button" class="timer-tab" id="tabHistory" onclick="switchTimerTab('history')">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 8v4l3 3"></path>
                     <circle cx="12" cy="12" r="10"></circle>
                 </svg>
-                <span>History</span>
+                <span data-i18n="history">Historial</span>
             </button>
         </div>
     </div>
@@ -184,31 +189,31 @@
 
 <style>
     /* Drawer Overlay */
-    .ninja-drawer-overlay {
+    .timer-drawer-overlay {
         position: fixed;
         inset: 0;
-        background: rgba(15, 23, 42, 0.4);
+        background: rgba(15, 23, 42, 0.45);
         backdrop-filter: blur(4px);
         z-index: 80;
         opacity: 0;
         visibility: hidden;
         transition: all 0.25s ease;
     }
-    .ninja-drawer-overlay.open {
+    .timer-drawer-overlay.open {
         opacity: 1;
         visibility: visible;
     }
 
     /* Drawer Container (Right side) */
-    .ninja-drawer {
+    .timer-drawer {
         position: fixed;
         top: 0;
         right: 0;
         bottom: 0;
         width: 420px;
         max-width: 95vw;
-        background: #ffffff;
-        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.15);
+        background: var(--surface, #ffffff);
+        box-shadow: -10px 0 35px rgba(0, 0, 0, 0.2);
         z-index: 90;
         transform: translateX(100%);
         transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
@@ -216,84 +221,82 @@
         flex-direction: column;
         border-left: 1px solid var(--border);
     }
-    .ninja-drawer.open {
+    .timer-drawer.open {
         transform: translateX(0);
     }
 
     /* Header */
-    .ninja-header {
+    .timer-header {
         height: 64px;
         padding: 0 20px;
         border-bottom: 1px solid var(--border);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #ffffff;
+        background: var(--surface, #ffffff);
     }
-    .ninja-header-left {
+    .timer-header-left {
         display: flex;
         align-items: center;
         gap: 12px;
     }
-    .ninja-avatar {
+    .timer-avatar {
         width: 38px;
         height: 38px;
-        border-radius: 50%;
-        background: #0284c7;
+        border-radius: 10px;
+        background: var(--accent-gradient, linear-gradient(135deg, #2563eb, #06b6d4));
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-weight: 800;
-        font-size: 1.05rem;
+        box-shadow: 0 3px 8px rgba(37, 99, 235, 0.25);
     }
-    .ninja-header-info {
+    .timer-header-info {
         display: flex;
         flex-direction: column;
     }
-    .ninja-title {
-        font-size: 1rem;
+    .timer-title {
+        font-size: 0.96rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text-main, #0f172a);
     }
-    .ninja-subtitle {
+    .timer-subtitle {
         font-size: 0.72rem;
-        color: #64748b;
+        color: var(--text-muted, #64748b);
         font-weight: 600;
     }
-    .ninja-header-actions {
+    .timer-header-actions {
         display: flex;
         align-items: center;
         gap: 6px;
     }
-    .ninja-icon-btn {
+    .timer-icon-btn {
         width: 34px;
         height: 34px;
         border-radius: 8px;
         background: transparent;
         border: none;
-        color: #64748b;
+        color: var(--text-muted, #64748b);
         display: flex;
         align-items: center;
         justify-content: center;
         cursor: pointer;
         transition: all 0.15s ease;
     }
-    .ninja-icon-btn:hover {
-        background: #f1f5f9;
-        color: #0f172a;
+    .timer-icon-btn:hover {
+        background: var(--surface-subtle, #f1f5f9);
+        color: var(--text-main, #0f172a);
     }
 
     /* Active Stopwatch Banner */
     .active-stopwatch-banner {
-        background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%);
+        background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
         color: white;
         padding: 14px 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        border-bottom: 1px solid #4338ca;
-        animation: pulseSubtle 3s infinite;
+        border-bottom: 1px solid rgba(255,255,255,0.15);
     }
     .stopwatch-details {
         display: flex;
@@ -315,7 +318,7 @@
     }
     .stopwatch-task-title {
         font-size: 0.8rem;
-        color: #c7d2fe;
+        color: #e0f2fe;
         font-weight: 600;
         max-width: 200px;
         white-space: nowrap;
@@ -348,10 +351,11 @@
     }
 
     /* Body & Start a timer Section */
-    .ninja-body {
+    .timer-body {
         padding: 20px;
         flex: 1;
         overflow-y: auto;
+        background: var(--surface, #ffffff);
     }
     .start-timer-header {
         display: flex;
@@ -360,9 +364,9 @@
         margin-bottom: 16px;
     }
     .start-timer-header h3 {
-        font-size: 1.35rem;
+        font-size: 1.25rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text-main, #0f172a);
         letter-spacing: -0.02em;
     }
     .timer-control-buttons {
@@ -371,8 +375,8 @@
         gap: 10px;
     }
     .btn-circle {
-        width: 42px;
-        height: 42px;
+        width: 40px;
+        height: 40px;
         border-radius: 50%;
         border: none;
         display: flex;
@@ -383,24 +387,24 @@
         color: white;
     }
     .btn-circle-check {
-        background: #0284c7;
-        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        background: var(--primary, #2563eb);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
     }
     .btn-circle-check:hover {
-        background: #0369a1;
+        background: var(--primary-hover, #1d4ed8);
         transform: scale(1.05);
     }
     .btn-circle-timer {
-        background: #0284c7;
-        box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        background: var(--accent, #06b6d4);
+        box-shadow: 0 4px 10px rgba(6, 182, 212, 0.3);
     }
     .btn-circle-timer:hover {
-        background: #0369a1;
+        background: #0891b2;
         transform: scale(1.05);
     }
 
     /* Form Fields */
-    .ninja-form {
+    .timer-form {
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -409,34 +413,34 @@
         display: block;
         font-size: 0.8rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--text-muted, #64748b);
         margin-bottom: 6px;
     }
-    .ninja-input {
+    .timer-input {
         width: 100%;
         padding: 10px 14px;
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         font-family: inherit;
         font-size: 0.92rem;
-        color: #0f172a;
-        background: #ffffff;
+        color: var(--text-main, #0f172a);
+        background: var(--surface-bg, #ffffff);
         outline: none;
         transition: border-color 0.2s ease;
     }
-    .ninja-input:focus {
-        border-color: #0284c7;
-        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    .timer-input:focus {
+        border-color: var(--primary, #2563eb);
+        box-shadow: 0 0 0 3px var(--primary-glow);
     }
-    .ninja-input-desc {
+    .timer-input-desc {
         border-radius: var(--radius-sm);
         padding: 12px 14px;
         font-weight: 500;
     }
-    .ninja-hint {
+    .timer-hint {
         display: block;
         font-size: 0.74rem;
-        color: #94a3b8;
+        color: var(--text-light, #94a3b8);
         margin-top: 4px;
     }
 
@@ -444,7 +448,7 @@
     .mode-toggle-group {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        background: #f1f5f9;
+        background: var(--surface-subtle, #f1f5f9);
         padding: 4px;
         border-radius: var(--radius-sm);
         gap: 4px;
@@ -453,7 +457,7 @@
         padding: 8px 12px;
         font-size: 0.85rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--text-muted, #64748b);
         background: transparent;
         border: none;
         border-radius: 6px;
@@ -461,50 +465,51 @@
         transition: all 0.15s ease;
     }
     .mode-toggle-btn.active {
-        background: #ffffff;
-        color: #0284c7;
+        background: var(--surface, #ffffff);
+        color: var(--primary, #2563eb);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         font-weight: 700;
     }
 
     /* Pills Row */
-    .ninja-pills-row {
+    .timer-pills-row {
         display: flex;
         flex-wrap: wrap;
         gap: 8px;
         margin-top: 4px;
     }
-    .ninja-pill-select {
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
+    .timer-pill-select {
+        background: var(--surface-subtle, #f1f5f9);
+        border: 1px solid var(--border);
         border-radius: 9999px;
         padding: 5px 12px;
         font-size: 0.78rem;
         font-weight: 600;
-        color: #475569;
+        color: var(--text-main, #475569);
         cursor: pointer;
         outline: none;
     }
-    .ninja-pill-select:hover {
-        background: #e2e8f0;
+    .timer-pill-select:hover {
+        background: var(--surface-hover, #e2e8f0);
     }
     .pill-badge {
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        background: #f1f5f9;
-        border: 1px solid #e2e8f0;
+        background: var(--surface-subtle, #f1f5f9);
+        border: 1px solid var(--border);
         border-radius: 9999px;
         padding: 5px 12px;
         font-size: 0.78rem;
         font-weight: 600;
-        color: #475569;
+        color: var(--text-main, #475569);
     }
     .pill-badge span {
         width: 18px;
         height: 18px;
         border-radius: 50%;
-        background: #cbd5e1;
+        background: var(--primary-light, #eff6ff);
+        color: var(--primary, #2563eb);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -512,13 +517,13 @@
         font-weight: 800;
     }
 
-    .ninja-divider {
+    .timer-divider {
         border: none;
         border-top: 1px solid var(--border);
         margin: 22px 0;
     }
 
-    /* Recent Timers List (Image 1) */
+    /* Recent Timers List */
     .recent-header {
         display: flex;
         align-items: center;
@@ -528,14 +533,14 @@
     .recent-header h4 {
         font-size: 0.95rem;
         font-weight: 800;
-        color: #0f172a;
+        color: var(--text-main, #0f172a);
     }
-    .btn-text-purple {
+    .btn-text-primary {
         background: none;
         border: none;
         font-size: 0.78rem;
         font-weight: 700;
-        color: #0284c7;
+        color: var(--primary, #2563eb);
         cursor: pointer;
     }
     .recent-list {
@@ -544,7 +549,7 @@
         gap: 8px;
     }
     .recent-item-card {
-        background: #ffffff;
+        background: var(--surface, #ffffff);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         padding: 12px 14px;
@@ -554,12 +559,12 @@
         transition: all 0.2s ease;
     }
     .recent-item-card:hover {
-        border-color: #cbd5e1;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        border-color: var(--primary, #2563eb);
+        box-shadow: var(--shadow-subtle);
     }
     .recent-item-card.is-selected {
-        border-color: #0284c7;
-        background: #f0f9ff;
+        border-color: var(--primary, #2563eb);
+        background: var(--primary-light, #eff6ff);
     }
     .recent-item-left {
         display: flex;
@@ -572,12 +577,13 @@
         width: 8px;
         height: 8px;
         border-radius: 50%;
-        background: #38bdf8;
+        background: var(--accent, #06b6d4);
+        flex-shrink: 0;
     }
     .recent-task-name {
         font-size: 0.88rem;
         font-weight: 600;
-        color: #1e293b;
+        color: var(--text-main, #1e293b);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -591,15 +597,15 @@
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.88rem;
         font-weight: 600;
-        color: #475569;
+        color: var(--text-muted, #475569);
     }
     .btn-play-resume {
         width: 30px;
         height: 30px;
         border-radius: 50%;
-        background: #f1f5f9;
+        background: var(--surface-subtle, #f1f5f9);
         border: none;
-        color: #0284c7;
+        color: var(--primary, #2563eb);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -607,32 +613,32 @@
         transition: all 0.15s ease;
     }
     .btn-play-resume:hover {
-        background: #0284c7;
+        background: var(--primary, #2563eb);
         color: white;
         transform: scale(1.08);
     }
     .btn-popout-edit {
         background: none;
         border: none;
-        color: #94a3b8;
+        color: var(--text-light, #94a3b8);
         cursor: pointer;
     }
     .btn-popout-edit:hover {
-        color: #475569;
+        color: var(--text-main, #475569);
     }
 
     /* Bottom Actions & Tabs */
-    .ninja-footer {
+    .timer-footer {
         border-top: 1px solid var(--border);
-        background: #ffffff;
+        background: var(--surface, #ffffff);
         padding: 12px 20px 0;
     }
     .invoice-bridge-box {
         margin-bottom: 12px;
     }
-    .btn-bridge-crater {
+    .btn-bridge-invoice {
         width: 100%;
-        background: linear-gradient(135deg, #6c5ce7 0%, #5850ec 100%);
+        background: var(--accent-gradient, linear-gradient(135deg, #2563eb 0%, #06b6d4 100%));
         color: white;
         border: none;
         padding: 10px 14px;
@@ -644,19 +650,19 @@
         justify-content: center;
         gap: 8px;
         cursor: pointer;
-        box-shadow: 0 4px 12px rgba(108, 92, 231, 0.25);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
         transition: all 0.2s ease;
     }
-    .btn-bridge-crater:hover {
-        background: linear-gradient(135deg, #5b4bd8 0%, #4f46e5 100%);
+    .btn-bridge-invoice:hover {
+        opacity: 0.95;
         transform: translateY(-1px);
     }
-    .ninja-tabs {
+    .timer-tabs {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        border-top: 1px solid #f1f5f9;
+        border-top: 1px solid var(--border);
     }
-    .ninja-tab {
+    .timer-tab {
         padding: 12px;
         background: none;
         border: none;
@@ -666,26 +672,26 @@
         gap: 8px;
         font-size: 0.88rem;
         font-weight: 600;
-        color: #64748b;
+        color: var(--text-muted, #64748b);
         cursor: pointer;
         position: relative;
         transition: color 0.15s ease;
     }
-    .ninja-tab:hover {
-        color: #0284c7;
+    .timer-tab:hover {
+        color: var(--primary, #2563eb);
     }
-    .ninja-tab.active {
-        color: #0284c7;
+    .timer-tab.active {
+        color: var(--primary, #2563eb);
         font-weight: 700;
     }
-    .ninja-tab.active::after {
+    .timer-tab.active::after {
         content: '';
         position: absolute;
         bottom: 0;
         left: 20%;
         right: 20%;
         height: 3px;
-        background: #0284c7;
+        background: var(--primary, #2563eb);
         border-radius: 3px 3px 0 0;
     }
 </style>
@@ -699,8 +705,8 @@
 
     // Toggle Drawer Open/Close
     function toggleTimerDrawer() {
-        const drawer = document.getElementById('ninjaDrawer');
-        const overlay = document.getElementById('ninjaDrawerOverlay');
+        const drawer = document.getElementById('timerDrawer') || document.getElementById('ninjaDrawer');
+        const overlay = document.getElementById('timerDrawerOverlay') || document.getElementById('ninjaDrawerOverlay');
         const isOpen = drawer.classList.contains('open');
 
         if (isOpen) {
@@ -752,7 +758,7 @@
             // Populate Clients dropdown
             const clientSelect = document.getElementById('taskClientSelect');
             if (clientSelect) {
-                clientSelect.innerHTML = '<option value="">👤 Client</option>';
+                clientSelect.innerHTML = '<option value="">👤 Cliente</option>';
                 (data.clients || []).forEach(c => {
                     clientSelect.innerHTML += `<option value="${c.id}">${c.trade_name || c.legal_name}</option>`;
                 });
@@ -761,7 +767,7 @@
             // Populate Projects dropdown
             const projectSelect = document.getElementById('taskProjectSelect');
             if (projectSelect) {
-                projectSelect.innerHTML = '<option value="">📁 Project</option>';
+                projectSelect.innerHTML = '<option value="">📁 Proyecto</option>';
                 (data.projects || []).forEach(p => {
                     projectSelect.innerHTML += `<option value="${p.id}">${p.name}</option>`;
                 });
@@ -781,13 +787,13 @@
         }
     }
 
-    // Render Recent tasks list matching Image 1
+    // Render Recent tasks list
     function renderRecentList(tasks) {
         const list = document.getElementById('recentTasksList');
         if (!list) return;
 
         if (tasks.length === 0) {
-            list.innerHTML = '<div style="text-align: center; color: #94a3b8; padding: 20px; font-size: 0.85rem;">No hay tareas registradas aún.</div>';
+            list.innerHTML = '<div style="text-align: center; color: var(--text-muted); padding: 20px; font-size: 0.85rem;">No hay tareas registradas aún.</div>';
             return;
         }
 
@@ -805,7 +811,7 @@
                     <span class="recent-dot" style="${isRunning ? 'background: #22c55e;' : ''}"></span>
                     <div style="min-width: 0;">
                         <div class="recent-task-name" title="${t.title}">${t.title}</div>
-                        <small style="font-size: 0.72rem; color: #94a3b8;">${t.project ? t.project.name : 'General'} • S/ ${parseFloat(t.hourly_rate).toFixed(2)}/h</small>
+                        <small style="font-size: 0.72rem; color: var(--text-muted);">${t.project ? t.project.name : 'General'} • S/ ${parseFloat(t.hourly_rate).toFixed(2)}/h</small>
                     </div>
                 </div>
                 <div class="recent-item-right">
@@ -863,16 +869,15 @@
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                     <polyline points="14 2 14 8 20 8"></polyline>
                 </svg>
-                <span>Facturar Tareas a Factura Crater</span>
+                <span>Facturar Tareas Seleccionadas</span>
             `;
         }
     }
 
-    // Convert selected tasks to Crater New Invoice
+    // Convert selected tasks to New Invoice
     function convertSelectedTasksToInvoice() {
         let taskIds = Array.from(selectedTaskIdsForBilling);
         if (taskIds.length === 0) {
-            // Select all billable tasks if none checked
             taskIds = loadedTasks.filter(t => t.total_seconds > 0 || t.hours > 0).map(t => t.id).slice(0, 3);
         }
 
@@ -1074,7 +1079,7 @@
         }
     }
 
-    function switchNinjaTab(tab) {
+    function switchTimerTab(tab) {
         document.getElementById('tabToday').classList.toggle('active', tab === 'today');
         document.getElementById('tabHistory').classList.toggle('active', tab === 'history');
         if (tab === 'history') {

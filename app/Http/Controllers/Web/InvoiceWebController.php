@@ -89,7 +89,7 @@ class InvoiceWebController extends Controller
             'unit_code' => $v->product->unit->code ?? 'NIU'
         ])->values()->toArray();
 
-        // Si se importan tareas desde el Invoice Ninja Task Tracker:
+        // Si se importan tareas desde el Task & Time Tracker:
         $preloadedItems = [];
         $selectedTaskIds = [];
         if ($request->has('tasks')) {
@@ -177,7 +177,7 @@ class InvoiceWebController extends Controller
 
         $invoice = $this->invoiceService->createDraft($invoiceData, $items);
 
-        // Si se vinculó tareas de Invoice Ninja:
+        // Si se vinculó tareas registradas:
         if ($request->filled('task_ids')) {
             $taskIds = is_array($request->task_ids) ? $request->task_ids : explode(',', $request->task_ids);
             Task::whereIn('id', $taskIds)->update([

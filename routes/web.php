@@ -1,19 +1,21 @@
 <?php
 
+use App\Http\Controllers\Web\InventoryWebController;
 use App\Http\Controllers\Web\InvoiceWebController;
+use App\Http\Controllers\Web\PosWebController;
 use App\Http\Controllers\Web\TaskWebController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | Web Routes - Enterprise Billing & POS System
-| UI Inspired by Crater Invoice & Invoice Ninja Tasks
+| Unified Platform: Invoicing, Tasks, Inventory & POS
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', fn () => redirect()->route('invoices.index'));
 
-// Crater Invoice Web UI
+// Invoicing & Document Management
 Route::prefix('invoices')->name('invoices.')->group(function () {
     Route::get('/', [InvoiceWebController::class, 'index'])->name('index');
     Route::get('/create', [InvoiceWebController::class, 'create'])->name('create');
@@ -24,7 +26,17 @@ Route::prefix('invoices')->name('invoices.')->group(function () {
     Route::get('/{id}/pdf', [InvoiceWebController::class, 'pdf'])->name('pdf');
 });
 
-// Invoice Ninja Task & Time Tracking Companion API & Web endpoints
+// Inventory, Stock & Kardex
+Route::get('/inventory', [InventoryWebController::class, 'index'])->name('inventory.index');
+
+// POS & Cash Register Terminal
+Route::prefix('pos')->name('pos.')->group(function () {
+    Route::get('/', [PosWebController::class, 'index'])->name('index');
+    Route::post('/open', [PosWebController::class, 'openSession'])->name('open');
+    Route::post('/{id}/close', [PosWebController::class, 'closeSession'])->name('close');
+});
+
+// Task & Time Tracking Companion
 Route::prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/', [TaskWebController::class, 'index'])->name('index');
     Route::post('/', [TaskWebController::class, 'store'])->name('store');

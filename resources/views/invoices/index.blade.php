@@ -1,23 +1,23 @@
 @extends('layouts.app')
 
-@section('title', 'Facturas & Boletas - Crater Style')
+@section('title', 'Facturas & Boletas')
 
 @section('content')
-<div class="crater-invoice-container">
+<div class="apex-invoice-container">
     <!-- Top Header: Title, Search, and New Invoice CTA -->
     <div class="invoice-header-row">
         <div>
-            <h1 class="invoice-title">Invoices</h1>
-            <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">Gestión de comprobantes fiscales, cobranzas y facturación electrónica</p>
+            <h1 class="invoice-title" data-i18n="invoices_title">Facturación & Comprobantes</h1>
+            <p class="invoice-subtitle" data-i18n="invoices_subtitle">Gestión de comprobantes fiscales, cobranzas y facturación electrónica</p>
         </div>
 
         <div style="display: flex; align-items: center; gap: 12px;">
-            <button type="button" class="btn btn-secondary" onclick="toggleTimerDrawer()" title="Abrir temporizador Invoice Ninja">
+            <button type="button" class="btn btn-secondary" onclick="toggleTimerDrawer()" title="Abrir temporizador de tareas">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
-                <span>Tareas & Timer</span>
+                <span data-i18n="btn_tasks_timer">Tareas & Timer</span>
             </button>
 
             <a href="{{ route('invoices.create') }}" class="btn btn-primary" id="btnNewInvoice">
@@ -25,98 +25,98 @@
                     <line x1="12" y1="5" x2="12" y2="19"></line>
                     <line x1="5" y1="12" x2="19" y2="12"></line>
                 </svg>
-                <span>+ New Invoice</span>
+                <span data-i18n="btn_new_invoice">+ Nueva Factura</span>
             </a>
         </div>
     </div>
 
-    <!-- Quick Stats Cards (Crater SaaS Dashboard) -->
+    <!-- Quick Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card">
-            <span class="stat-label">Total Facturado</span>
-            <span class="stat-value" style="color: #6c5ce7;">S/ {{ number_format($stats['total_invoiced'], 2) }}</span>
-            <small class="stat-sub">Comprobantes emitidos y pagados</small>
+            <span class="stat-label" data-i18n="stat_total_invoiced">Total Facturado</span>
+            <span class="stat-value" style="color: var(--primary);">S/ {{ number_format($stats['total_invoiced'], 2) }}</span>
+            <small class="stat-sub" data-i18n="stat_total_invoiced_sub">Comprobantes emitidos y pagados</small>
         </div>
         <div class="stat-card">
-            <span class="stat-label">Por Cobrar (Outstanding)</span>
+            <span class="stat-label" data-i18n="stat_outstanding">Por Cobrar (Pendiente)</span>
             <span class="stat-value" style="color: #f59e0b;">S/ {{ number_format($stats['outstanding'], 2) }}</span>
-            <small class="stat-sub">Saldos pendientes de pago</small>
+            <small class="stat-sub" data-i18n="stat_outstanding_sub">Saldos pendientes de pago</small>
         </div>
         <div class="stat-card">
-            <span class="stat-label">Borradores (Drafts)</span>
-            <span class="stat-value" style="color: #64748b;">{{ $stats['drafts_count'] }}</span>
-            <small class="stat-sub">Sin correlativo asignado</small>
+            <span class="stat-label" data-i18n="stat_drafts">Borradores</span>
+            <span class="stat-value" style="color: var(--text-muted);">{{ $stats['drafts_count'] }}</span>
+            <small class="stat-sub" data-i18n="stat_drafts_sub">Sin correlativo asignado</small>
         </div>
         <div class="stat-card">
-            <span class="stat-label">Total Comprobantes</span>
+            <span class="stat-label" data-i18n="stat_total_docs">Total Comprobantes</span>
             <span class="stat-value">{{ $stats['total_count'] }}</span>
-            <small class="stat-sub">Histórico total</small>
+            <small class="stat-sub" data-i18n="stat_total_docs_sub">Histórico general</small>
         </div>
     </div>
 
-    <!-- Invoices Card with Tabs (Crater UI matching Image 2 mobile/web) -->
-    <div class="crater-card" style="padding: 0;">
-        <!-- Status Filter Tabs: All, Due, Draft, Paid, Void -->
-        <div class="crater-tabs-header">
-            <div class="tabs-group">
-                <a href="{{ route('invoices.index', ['status' => 'all']) }}" class="tab-link {{ $status === 'all' ? 'active' : '' }}">
-                    <span>All</span>
+    <!-- Invoices Card with Tabs -->
+    <div class="apex-card" style="padding: 0;">
+        <!-- Status Filter Tabs: All, Due, Draft, Issued, Paid, Voided -->
+        <div class="apex-tabs-header">
+            <div class="tabs-group" id="invoiceTabsGroup">
+                <button type="button" onclick="filterTab('all', this)" class="tab-btn {{ $status === 'all' ? 'active' : '' }}" data-tab="all">
+                    <span data-i18n="tab_all">Todos</span>
                     <span class="tab-count">{{ $stats['total_count'] }}</span>
-                </a>
-                <a href="{{ route('invoices.index', ['status' => 'due']) }}" class="tab-link {{ $status === 'due' ? 'active' : '' }}">
-                    <span>Due</span>
+                </button>
+                <button type="button" onclick="filterTab('due', this)" class="tab-btn {{ $status === 'due' ? 'active' : '' }}" data-tab="due">
+                    <span data-i18n="tab_due">Vencidos</span>
                     @if($stats['due_tab_count'] > 0)
                         <span class="tab-count count-due">{{ $stats['due_tab_count'] }}</span>
                     @endif
-                </a>
-                <a href="{{ route('invoices.index', ['status' => 'draft']) }}" class="tab-link {{ $status === 'draft' ? 'active' : '' }}">
-                    <span>Draft</span>
+                </button>
+                <button type="button" onclick="filterTab('draft', this)" class="tab-btn {{ $status === 'draft' ? 'active' : '' }}" data-tab="draft">
+                    <span data-i18n="tab_draft">Borrador</span>
                     <span class="tab-count">{{ $stats['draft_tab_count'] }}</span>
-                </a>
-                <a href="{{ route('invoices.index', ['status' => 'issued']) }}" class="tab-link {{ $status === 'issued' ? 'active' : '' }}">
-                    <span>Issued</span>
-                </a>
-                <a href="{{ route('invoices.index', ['status' => 'paid']) }}" class="tab-link {{ $status === 'paid' ? 'active' : '' }}">
-                    <span>Paid</span>
-                </a>
-                <a href="{{ route('invoices.index', ['status' => 'voided']) }}" class="tab-link {{ $status === 'voided' ? 'active' : '' }}">
-                    <span>Voided</span>
-                </a>
+                </button>
+                <button type="button" onclick="filterTab('issued', this)" class="tab-btn {{ $status === 'issued' ? 'active' : '' }}" data-tab="issued">
+                    <span data-i18n="tab_issued">Emitidos</span>
+                </button>
+                <button type="button" onclick="filterTab('paid', this)" class="tab-btn {{ $status === 'paid' ? 'active' : '' }}" data-tab="paid">
+                    <span data-i18n="tab_paid">Pagados</span>
+                </button>
+                <button type="button" onclick="filterTab('voided', this)" class="tab-btn {{ $status === 'voided' ? 'active' : '' }}" data-tab="voided">
+                    <span data-i18n="tab_voided">Anulados</span>
+                </button>
             </div>
 
-            <!-- Search Form -->
-            <form action="{{ route('invoices.index') }}" method="GET" class="search-form">
-                <input type="hidden" name="status" value="{{ $status }}">
+            <!-- Instant Search Input -->
+            <div class="search-form">
                 <div class="search-input-wrapper">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
-                    <input type="text" name="search" value="{{ $search }}" placeholder="Buscar por número o cliente..." class="search-input">
-                    @if($search)
-                        <a href="{{ route('invoices.index', ['status' => $status]) }}" style="font-size: 0.8rem; color: #94a3b8; text-decoration: none;">&times;</a>
-                    @endif
+                    <input type="text" id="invoiceLiveSearch" value="{{ $search }}" placeholder="Buscar por número o cliente..." class="search-input" oninput="handleInstantSearch(this.value)">
+                    <button type="button" id="clearSearchBtn" onclick="clearSearch()" style="display: {{ $search ? 'block' : 'none' }}; background: none; border: none; cursor: pointer; color: var(--text-muted); font-size: 1rem;">&times;</button>
                 </div>
-            </form>
+            </div>
         </div>
 
         <!-- Invoices Table -->
         <div class="table-responsive">
-            <table class="crater-list-table">
+            <table class="apex-list-table">
                 <thead>
                     <tr>
-                        <th>Número / Serie</th>
-                        <th>Cliente</th>
-                        <th>Fecha Emisión</th>
-                        <th>Vencimiento</th>
-                        <th style="text-align: right;">Total</th>
-                        <th style="text-align: center;">Estado</th>
-                        <th style="text-align: right; width: 140px;">Acciones</th>
+                        <th data-i18n="th_number_series">Número / Serie</th>
+                        <th data-i18n="th_client">Cliente</th>
+                        <th data-i18n="th_issue_date">Fecha Emisión</th>
+                        <th data-i18n="th_due_date">Vencimiento</th>
+                        <th style="text-align: right;" data-i18n="th_total">Total</th>
+                        <th style="text-align: center;" data-i18n="th_status">Estado</th>
+                        <th style="text-align: right; width: 140px;" data-i18n="th_actions">Acciones</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="invoiceTableBody">
                     @forelse($invoices as $inv)
-                        <tr>
+                        <tr class="invoice-data-row" 
+                            data-status="{{ strtolower($inv->status->value) }}" 
+                            data-is-due="{{ ($inv->due_date && $inv->due_date->isPast() && $inv->status->value !== 'paid') ? '1' : '0' }}"
+                            data-search-term="{{ strtolower(($inv->full_correlative ?? '') . ' ' . ($inv->customer->trade_name ?? '') . ' ' . ($inv->customer->legal_name ?? '') . ' ' . ($inv->customer->doc_number ?? '')) }}">
                             <td>
                                 <a href="{{ route('invoices.show', $inv->id) }}" class="invoice-number-link">
                                     {{ $inv->full_correlative ?? ('Borrador #' . $inv->id) }}
@@ -160,17 +160,25 @@
                             </td>
                         </tr>
                     @empty
-                        <tr>
+                        <tr id="emptyTableRow">
                             <td colspan="7" style="text-align: center; padding: 48px 20px; color: var(--text-muted);">
                                 <div style="font-size: 2.5rem; margin-bottom: 12px;">🧾</div>
-                                <div style="font-weight: 700; font-size: 1.1rem; color: #1e293b;">No se encontraron facturas</div>
-                                <p style="font-size: 0.88rem; margin-top: 6px;">Comienza creando tu primera factura o emitiendo tareas registradas.</p>
-                                <a href="{{ route('invoices.create') }}" class="btn btn-primary" style="margin-top: 16px;">
+                                <div style="font-weight: 700; font-size: 1.1rem; color: var(--text-main);" data-i18n="no_invoices_found">No se encontraron facturas</div>
+                                <p style="font-size: 0.88rem; margin-top: 6px;" data-i18n="no_invoices_sub">Comienza creando tu primera factura o emitiendo tareas registradas.</p>
+                                <a href="{{ route('invoices.create') }}" class="btn btn-primary" style="margin-top: 16px;" data-i18n="btn_create_first">
                                     + Crear Primera Factura
                                 </a>
                             </td>
                         </tr>
                     @endforelse
+                    
+                    <!-- Dynamic client-side empty state when filter finds nothing -->
+                    <tr id="noResultsFilterRow" style="display: none;">
+                        <td colspan="7" style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+                            <div style="font-weight: 600; font-size: 0.95rem; color: var(--text-main);">No hay comprobantes para este filtro o búsqueda</div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -184,15 +192,33 @@
 </div>
 
 <style>
+    .apex-invoice-container {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .invoice-title {
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: var(--text-main);
+    }
+
+    .invoice-subtitle {
+        color: var(--text-muted);
+        font-size: 0.88rem;
+        margin-top: 4px;
+    }
+
     /* Stats Grid */
     .stats-grid {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 16px;
-        margin-bottom: 24px;
     }
     .stat-card {
-        background: #ffffff;
+        background: var(--surface, #ffffff);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         padding: 18px 22px;
@@ -211,15 +237,15 @@
         font-size: 1.6rem;
         font-weight: 800;
         margin: 6px 0 2px;
-        color: #0f172a;
+        color: var(--text-main);
     }
     .stat-sub {
         font-size: 0.75rem;
-        color: #94a3b8;
+        color: var(--text-light);
     }
 
     /* Tabs Header */
-    .crater-tabs-header {
+    .apex-tabs-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -230,34 +256,37 @@
     }
     .tabs-group {
         display: flex;
-        gap: 8px;
+        gap: 4px;
     }
-    .tab-link {
+    .tab-btn {
         display: flex;
         align-items: center;
         gap: 8px;
         padding: 16px 14px;
-        text-decoration: none;
+        background: transparent;
+        border: none;
+        border-bottom: 2.5px solid transparent;
+        font-family: inherit;
         font-size: 0.88rem;
         font-weight: 600;
         color: var(--text-muted);
-        border-bottom: 2px solid transparent;
-        transition: all 0.2s ease;
+        cursor: pointer;
+        transition: all 0.15s ease;
     }
-    .tab-link:hover {
-        color: var(--crater-purple);
+    .tab-btn:hover {
+        color: var(--primary);
     }
-    .tab-link.active {
-        color: var(--crater-purple);
-        border-bottom-color: var(--crater-purple);
+    .tab-btn.active {
+        color: var(--primary);
+        border-bottom-color: var(--primary);
         font-weight: 700;
     }
     .tab-count {
-        background: #f1f5f9;
+        background: var(--surface-subtle, #f1f5f9);
         font-size: 0.72rem;
         padding: 2px 7px;
         border-radius: 9999px;
-        color: #475569;
+        color: var(--text-main, #475569);
     }
     .count-due {
         background: #fee2e2;
@@ -270,27 +299,29 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        background: #f8fafc;
+        background: var(--surface-subtle, #f8fafc);
         border: 1px solid var(--border);
         border-radius: var(--radius-sm);
         padding: 6px 12px;
+        color: var(--text-muted);
     }
     .search-input {
         background: transparent;
         border: none;
         outline: none;
+        font-family: inherit;
         font-size: 0.85rem;
-        color: #0f172a;
+        color: var(--text-main);
         width: 220px;
     }
 
     /* List Table */
-    .crater-list-table {
+    .apex-list-table {
         width: 100%;
         border-collapse: collapse;
     }
-    .crater-list-table th {
-        background: #fafafa;
+    .apex-list-table th {
+        background: var(--surface-subtle, #fafafa);
         padding: 12px 20px;
         font-size: 0.75rem;
         font-weight: 700;
@@ -299,18 +330,19 @@
         color: var(--text-muted);
         border-bottom: 1px solid var(--border);
     }
-    .crater-list-table td {
+    .apex-list-table td {
         padding: 14px 20px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid var(--border);
         font-size: 0.88rem;
+        color: var(--text-main);
     }
-    .crater-list-table tr:hover td {
-        background: #f8fafc;
+    .apex-list-table tr:hover td {
+        background: var(--surface-subtle, #f8fafc);
     }
     .invoice-number-link {
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
-        color: var(--crater-purple);
+        color: var(--primary);
         text-decoration: none;
     }
     .invoice-number-link:hover {
@@ -320,25 +352,25 @@
         display: inline-block;
         font-size: 0.68rem;
         font-weight: 700;
-        background: #f1f5f9;
-        color: #64748b;
+        background: var(--surface-subtle, #f1f5f9);
+        color: var(--text-muted);
         padding: 2px 6px;
         border-radius: 4px;
         margin-left: 6px;
     }
     .client-name {
         font-weight: 600;
-        color: #1e293b;
+        color: var(--text-main);
     }
     .client-doc {
         font-family: 'JetBrains Mono', monospace;
         font-size: 0.75rem;
-        color: #94a3b8;
+        color: var(--text-light);
     }
     .amount-val {
         font-family: 'JetBrains Mono', monospace;
         font-weight: 700;
-        color: #0f172a;
+        color: var(--text-main);
     }
     .action-buttons-group {
         display: flex;
@@ -350,9 +382,9 @@
         width: 32px;
         height: 32px;
         border-radius: 6px;
-        background: #f8fafc;
+        background: var(--surface-subtle, #f8fafc);
         border: 1px solid var(--border);
-        color: #64748b;
+        color: var(--text-muted);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -360,9 +392,99 @@
         transition: all 0.15s ease;
     }
     .action-btn:hover {
-        background: #f1f5f9;
-        color: var(--crater-purple);
-        border-color: #cbd5e1;
+        background: var(--surface-hover, #f1f5f9);
+        color: var(--primary);
+        border-color: var(--primary);
     }
 </style>
+
+<script>
+    let activeFilterStatus = '{{ $status ?? "all" }}';
+    let currentSearchTerm = '';
+
+    // Instant 0ms Tab Filtering
+    function filterTab(status, clickedBtn) {
+        activeFilterStatus = status;
+
+        // Update active class immediately
+        document.querySelectorAll('#invoiceTabsGroup .tab-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        if (clickedBtn) {
+            clickedBtn.classList.add('active');
+        }
+
+        // Update URL quietly without page reload
+        const url = new URL(window.location.href);
+        url.searchParams.set('status', status);
+        window.history.replaceState({}, '', url.toString());
+
+        // Perform instant DOM row filter
+        applyInstantFilter();
+    }
+
+    // Instant Keystroke Search
+    function handleInstantSearch(term) {
+        currentSearchTerm = term.toLowerCase().trim();
+        const clearBtn = document.getElementById('clearSearchBtn');
+        if (clearBtn) {
+            clearBtn.style.display = currentSearchTerm ? 'block' : 'none';
+        }
+        applyInstantFilter();
+    }
+
+    function clearSearch() {
+        const input = document.getElementById('invoiceLiveSearch');
+        if (input) {
+            input.value = '';
+            handleInstantSearch('');
+        }
+    }
+
+    function applyInstantFilter() {
+        const rows = document.querySelectorAll('#invoiceTableBody .invoice-data-row');
+        let visibleCount = 0;
+
+        rows.forEach(row => {
+            const rowStatus = row.getAttribute('data-status');
+            const isDue = row.getAttribute('data-is-due') === '1';
+            const searchTerm = row.getAttribute('data-search-term') || '';
+
+            let matchesTab = false;
+            if (activeFilterStatus === 'all') {
+                matchesTab = true;
+            } else if (activeFilterStatus === 'due') {
+                matchesTab = isDue || rowStatus === 'due';
+            } else {
+                matchesTab = (rowStatus === activeFilterStatus);
+            }
+
+            let matchesSearch = true;
+            if (currentSearchTerm) {
+                matchesSearch = searchTerm.includes(currentSearchTerm);
+            }
+
+            if (matchesTab && matchesSearch) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+
+        // Show/hide empty message
+        const noResultsRow = document.getElementById('noResultsFilterRow');
+        if (noResultsRow) {
+            if (rows.length > 0 && visibleCount === 0) {
+                noResultsRow.style.display = '';
+            } else {
+                noResultsRow.style.display = 'none';
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        applyInstantFilter();
+    });
+</script>
 @endsection

@@ -10,7 +10,7 @@
 
 Enterprise-grade backend engine designed for high-concurrency **Electronic Invoicing, Fiscal PDF Document Generation, Multi-Warehouse Inventory with Immutable Kardex, and Atomic Point-of-Sale (POS) Cash Register Management**.
 
-Engineered using strict typing with PHP 8.2+, Laravel 11, and Domain Service Layer patterns, taking inspiration from leading open-source billing platforms including [Crater Invoice](https://github.com/crater-invoice/crater), [Invoice Ninja](https://github.com/invoiceninja/invoiceninja), and [Akaunting](https://github.com/akaunting/akaunting).
+Engineered using strict typing with PHP 8.2+, Laravel 11, and Domain Service Layer patterns, delivering an independent, unified architecture for electronic billing, billable task tracking, multi-warehouse Kardex, and POS terminal cash management.
 
 ---
 
@@ -159,17 +159,19 @@ erDiagram
 
 ### Web Application & Time Tracking Endpoints
 
-| Method | Route | Description | Inspired Platform |
+| Method | Route | Description | Module |
 | :--- | :--- | :--- | :--- |
-| `GET` | `/invoices` | Crater-styled interactive invoices dashboard with status tabs | [Crater Invoice](https://github.com/crater-invoice/crater) |
-| `GET` | `/invoices/create` | Modern New Invoice builder with client card, auto tax, and item table | [Crater Invoice](https://github.com/crater-invoice/crater) |
-| `POST` | `/invoices` | Saves draft or atomically issues fiscal invoice with `lockForUpdate` | Core Domain |
-| `GET` | `/invoices/{id}/pdf` | Generates and streams printable tax invoice A4 PDF | [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) |
-| `GET` | `/tasks` | Retrieves active stopwatch status and recent timer entries | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
-| `POST` | `/tasks` | Registers new tasks with hours or starts live stopwatch timer | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
-| `POST` | `/tasks/{id}/start-timer` | Starts live stopwatch timer on an existing task | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
-| `POST` | `/tasks/{id}/stop-timer` | Pauses/stops running stopwatch and increments accumulated seconds | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
-| `POST` | `/tasks/convert-to-invoice` | Bridges tracked billable hours directly into a Crater Invoice draft | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+| `GET` | `/invoices` | Interactive invoices dashboard with status tabs, metrics, and instant filters | Invoicing & Sales |
+| `GET` | `/invoices/create` | Modern New Invoice builder with client card, auto tax, and item table | Invoicing & Sales |
+| `POST` | `/invoices` | Saves draft or atomically issues fiscal invoice with `lockForUpdate` | Invoicing & Sales |
+| `GET` | `/invoices/{id}/pdf` | Generates and streams printable tax invoice A4 PDF | Fiscal PDF Engine |
+| `GET` | `/inventory` | Multi-warehouse stock levels, min stock alerts, and Kardex movements | Inventory & Kardex |
+| `GET` | `/pos` | Cash register shift terminal, opening/closing counts, and cash variance audit | POS & Cash Shifts |
+| `GET` | `/tasks` | Retrieves active stopwatch status and recent timer entries | Time & Task Tracking |
+| `POST` | `/tasks` | Registers new tasks with hours or starts live stopwatch timer | Time & Task Tracking |
+| `POST` | `/tasks/{id}/start-timer` | Starts live stopwatch timer on an existing task | Time & Task Tracking |
+| `POST` | `/tasks/{id}/stop-timer` | Pauses/stops running stopwatch and increments accumulated seconds | Time & Task Tracking |
+| `POST` | `/tasks/convert-to-invoice` | Converts tracked billable hours directly into a legal Invoice draft | Billing Bridge |
 
 ---
 
