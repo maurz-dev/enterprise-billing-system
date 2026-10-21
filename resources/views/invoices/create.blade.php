@@ -596,11 +596,8 @@
         color: var(--text-main);
     }
 
-    .totals-grand .tot-value {
-        color: var(--primary);
-        font-size: 1.35rem;
-    }
 </style>
+@endsection
 
 @push('scripts')
 <script>
@@ -791,24 +788,32 @@
         showToast('Guarda primero el borrador de la factura para generar el PDF oficial.', 'info');
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
-        handleCustomerChange(document.getElementById('contactSelect'));
+    function initInvoiceCreate() {
+        const contactSel = document.getElementById('contactSelect');
+        if (!contactSel) return;
+        handleCustomerChange(contactSel);
         updateSeriesList();
 
-        // Load preloaded items
-        if (preloadedItems && preloadedItems.length > 0) {
-            preloadedItems.forEach(item => addItemRow(item));
-        } else {
-            // Default 1 blank row or first catalog item
-            addItemRow(catalogVariants[0] ? {
-                description: catalogVariants[0].name,
-                quantity: 1,
-                unit_price: catalogVariants[0].price,
-                tax_rate: catalogVariants[0].tax_rate,
-                product_variant_id: catalogVariants[0].id
-            } : null);
+        const tbody = document.getElementById('itemsTableBody');
+        if (tbody && tbody.children.length === 0) {
+            if (typeof preloadedItems !== 'undefined' && preloadedItems && preloadedItems.length > 0) {
+                preloadedItems.forEach(item => addItemRow(item));
+            } else if (typeof catalogVariants !== 'undefined' && catalogVariants.length > 0) {
+                addItemRow({
+                    description: catalogVariants[0].name,
+                    quantity: 1,
+                    unit_price: catalogVariants[0].price,
+                    tax_rate: catalogVariants[0].tax_rate,
+                    product_variant_id: catalogVariants[0].id
+                });
+            }
         }
-    });
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initInvoiceCreate);
+    } else {
+        initInvoiceCreate();
+    }
 </script>
 @endpush
-@endsection

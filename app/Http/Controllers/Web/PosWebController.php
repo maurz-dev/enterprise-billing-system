@@ -35,12 +35,21 @@ class PosWebController extends Controller
             ->take(8)
             ->get();
 
+        $totalClosedSessionsCount = CashSession::whereNull('open_flag')->count();
+        $totalRegistersCount = $registers->count();
+        $currentCashInDrawer = $activeSession 
+            ? ($activeSession->opening_balance + $activeSession->movements->where('type', 'inflow')->sum('amount') - $activeSession->movements->where('type', 'outflow')->sum('amount'))
+            : 0.0;
+
         return view('pos.index', compact(
             'branches',
             'registers',
             'paymentMethods',
             'activeSession',
-            'recentSessions'
+            'recentSessions',
+            'totalClosedSessionsCount',
+            'totalRegistersCount',
+            'currentCashInDrawer'
         ));
     }
 

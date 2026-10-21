@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
-Route::get('/', fn () => redirect()->route('invoices.index'));
+Route::redirect('/', '/invoices');
 
 // Invoicing & Document Management
 Route::prefix('invoices')->name('invoices.')->group(function () {

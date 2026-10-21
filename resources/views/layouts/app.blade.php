@@ -404,6 +404,293 @@
             padding: 24px;
         }
 
+        /* Headers & Containers */
+        .apex-invoice-container, .crater-invoice-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .invoice-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+        .invoice-title {
+            font-size: 1.75rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            margin: 0;
+        }
+        .invoice-subtitle {
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            margin-top: 4px;
+        }
+
+        /* Stats Grid & Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 18px 22px;
+            box-shadow: var(--shadow-subtle);
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+        .stat-card:hover {
+            box-shadow: var(--shadow-card);
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+        }
+        .stat-label {
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+        .stat-value {
+            display: block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            font-weight: 800;
+            margin: 6px 0 2px;
+            color: var(--text-main);
+        }
+        .stat-sub {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        /* Tabs Header */
+        .apex-tabs-header, .crater-tabs-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .tabs-group {
+            display: flex;
+            gap: 4px;
+        }
+        .tab-btn, .tab-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 14px;
+            background: transparent;
+            border: none;
+            border-bottom: 2.5px solid transparent;
+            font-family: inherit;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s ease;
+        }
+        .tab-btn:hover, .tab-link:hover {
+            color: var(--primary);
+        }
+        .tab-btn.active, .tab-link.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 700;
+        }
+        .tab-count {
+            background: var(--surface-subtle);
+            font-size: 0.72rem;
+            padding: 2px 7px;
+            border-radius: 9999px;
+            color: var(--text-main);
+        }
+        .count-due {
+            background: #fee2e2;
+            color: #dc2626;
+            font-weight: 800;
+        }
+
+        /* Search Form */
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .search-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface-subtle);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            color: var(--text-muted);
+        }
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: var(--text-main);
+            width: 220px;
+        }
+
+        /* Table & Lists */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+        .apex-list-table, .crater-list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .apex-list-table th, .crater-list-table th {
+            background: var(--surface-subtle);
+            padding: 14px 20px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+        .apex-list-table td, .crater-list-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.88rem;
+            color: var(--text-main);
+            vertical-align: middle;
+        }
+        .apex-list-table tr:hover td, .crater-list-table tr:hover td {
+            background: var(--surface-subtle);
+        }
+        .invoice-number-link {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .invoice-number-link:hover {
+            text-decoration: underline;
+        }
+        .doc-badge {
+            display: inline-block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            background: var(--surface-subtle);
+            color: var(--text-muted);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 6px;
+        }
+        .client-name {
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .client-doc {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        .amount-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        .date-col {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* Pulse Indicator */
+        .pulse-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+            display: inline-block;
+        }
+
+        /* Modals & Forms */
+        .apex-modal, .crater-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .apex-modal-backdrop, .crater-modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+        }
+        .apex-modal-dialog, .crater-modal-dialog {
+            position: relative;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-elevated);
+            width: 480px;
+            max-width: 90vw;
+            padding: 28px;
+            z-index: 101;
+            border: 1px solid var(--border);
+        }
+        .apex-label, .crater-label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+        .apex-select, .crater-select, .apex-input, .crater-input, .apex-textarea, .crater-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.9rem;
+            color: var(--text-main);
+            background: var(--surface);
+            outline: none;
+            transition: var(--transition);
+        }
+        .apex-select:focus, .crater-select:focus, .apex-input:focus, .crater-input:focus, .apex-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        /* Top Progress Bar Loader */
+        #spaLoader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            z-index: 9999;
+            transition: width 0.2s ease, opacity 0.3s ease;
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.6);
+            opacity: 0;
+        }
+
         /* Toast Container */
         .toast-container {
             position: fixed;
@@ -444,6 +731,7 @@
     @stack('styles')
 </head>
 <body>
+    <div id="spaLoader"></div>
 
     <!-- Left Sidebar Navigation -->
     <aside class="apex-sidebar" id="apexSidebar">
@@ -905,10 +1193,149 @@
             }, 3500);
         }
 
+        // ==========================================
+        // Ultra-Fast SPA Navigation & Hover Prefetch
+        // ==========================================
+        const pageCache = new Map();
+
+        function showTopLoader() {
+            const l = document.getElementById('spaLoader');
+            if (!l) return;
+            l.style.opacity = '1';
+            l.style.width = '35%';
+            setTimeout(() => { if (l.style.opacity === '1') l.style.width = '75%'; }, 60);
+        }
+
+        function hideTopLoader() {
+            const l = document.getElementById('spaLoader');
+            if (!l) return;
+            l.style.width = '100%';
+            setTimeout(() => {
+                l.style.opacity = '0';
+                setTimeout(() => { l.style.width = '0%'; }, 200);
+            }, 100);
+        }
+
+        function prefetchPage(url) {
+            if (pageCache.has(url) || url.includes('/pdf') || url.includes('/api/')) return;
+            fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                .then(r => r.text())
+                .then(html => pageCache.set(url, html))
+                .catch(() => {});
+        }
+
+        async function spaNavigate(url, push = true) {
+            try {
+                showTopLoader();
+                let html = pageCache.get(url);
+                if (!html) {
+                    const res = await fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } });
+                    if (!res.ok) throw new Error('Fetch failed');
+                    html = await res.text();
+                    pageCache.set(url, html);
+                }
+
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+
+                // Update Page Title
+                document.title = doc.title;
+
+                // Swap Content
+                const newContent = doc.querySelector('.apex-content');
+                const currentContent = document.querySelector('.apex-content');
+                if (newContent && currentContent) {
+                    currentContent.innerHTML = newContent.innerHTML;
+                }
+
+                // Update Active Link in Sidebar
+                const currentPath = new URL(url).pathname;
+                document.querySelectorAll('.apex-nav .nav-item').forEach(item => {
+                    const href = item.getAttribute('href');
+                    if (href && !href.startsWith('javascript:')) {
+                        const itemPath = new URL(href, window.location.origin).pathname;
+                        item.classList.toggle('active', itemPath === currentPath);
+                    }
+                });
+
+                // Execute scripts in the view
+                if (newContent) {
+                    const scripts = newContent.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        Array.from(oldScript.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value));
+                        newScript.appendChild(document.createTextNode(oldScript.innerHTML));
+                        document.body.appendChild(newScript);
+                        setTimeout(() => newScript.remove(), 400);
+                    });
+                }
+
+                if (push) {
+                    window.history.pushState({}, '', url);
+                }
+
+                // Re-apply language and theme instantly
+                applyLanguage(currentLang);
+                applyTheme(currentTheme);
+
+                window.scrollTo({ top: 0, behavior: 'instant' });
+                hideTopLoader();
+            } catch (err) {
+                hideTopLoader();
+                window.location.href = url;
+            }
+        }
+
+        // Hover prefetch for 0ms instantaneous clicking
+        document.addEventListener('mouseover', (e) => {
+            const link = e.target.closest('a');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (href && !href.startsWith('#') && !href.startsWith('javascript:') && !link.target && !href.includes('/pdf')) {
+                const url = new URL(link.href, window.location.origin);
+                if (url.origin === window.location.origin) {
+                    prefetchPage(url.href);
+                }
+            }
+        });
+
+        // Intercept clicks on links
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a');
+            if (!link) return;
+            const href = link.getAttribute('href');
+            if (!href || href.startsWith('#') || href.startsWith('javascript:') || link.target === '_blank' || href.includes('/pdf') || link.hasAttribute('download')) {
+                return;
+            }
+            const url = new URL(link.href, window.location.origin);
+            if (url.origin === window.location.origin) {
+                e.preventDefault();
+                spaNavigate(url.href);
+            }
+        });
+
+        window.addEventListener('popstate', () => {
+            spaNavigate(window.location.href, false);
+        });
+
+        function warmNavigationCache() {
+            const routesToWarm = [
+                "{{ route('invoices.index') }}",
+                "{{ route('inventory.index') }}",
+                "{{ route('pos.index') }}"
+            ];
+            routesToWarm.forEach(url => {
+                if (url !== window.location.href) {
+                    prefetchPage(url);
+                }
+            });
+        }
+
         // Initialize settings on page load
         document.addEventListener('DOMContentLoaded', () => {
             applyTheme(currentTheme);
             applyLanguage(currentLang);
+            setTimeout(warmNavigationCache, 800);
         });
     </script>
 

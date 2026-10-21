@@ -36,6 +36,32 @@
         </div>
     </div>
 
+    <!-- POS Metrics Grid -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <span class="stat-label">Estado de Caja</span>
+            <span class="stat-value" style="color: {{ $activeSession ? '#10b981' : 'var(--text-muted)' }};">
+                {{ $activeSession ? 'EN SERVICIO' : 'CERRADA' }}
+            </span>
+            <small class="stat-sub">{{ $activeSession ? $activeSession->register->name : 'Sin sesión abierta' }}</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Efectivo en Gaveta</span>
+            <span class="stat-value" style="color: var(--primary);">S/ {{ number_format($currentCashInDrawer, 2) }}</span>
+            <small class="stat-sub">Monto físico estimado</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Turnos Auditoría</span>
+            <span class="stat-value">{{ $totalClosedSessionsCount }}</span>
+            <small class="stat-sub">Arqueos históricos cerrados</small>
+        </div>
+        <div class="stat-card">
+            <span class="stat-label">Terminales POS</span>
+            <span class="stat-value" style="color: var(--accent);">{{ $totalRegistersCount }}</span>
+            <small class="stat-sub">Cajas registradoras en sede</small>
+        </div>
+    </div>
+
     <!-- Active Terminal Status Banner -->
     <div class="apex-card" style="margin-bottom: 24px; border-left: 5px solid {{ $activeSession ? '#10b981' : '#94a3b8' }};">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
@@ -203,19 +229,21 @@
 @endif
 
 <script>
-    function openOpenSessionModal() {
-        document.getElementById('openSessionModal').style.display = 'flex';
-    }
-    function closeOpenSessionModal() {
-        document.getElementById('openSessionModal').style.display = 'none';
-    }
-    function openCloseSessionModal() {
-        const modal = document.getElementById('closeSessionModal');
-        if (modal) modal.style.display = 'flex';
-    }
-    function closeCloseSessionModal() {
-        const modal = document.getElementById('closeSessionModal');
-        if (modal) modal.style.display = 'none';
-    }
+    window.openOpenSessionModal = function() {
+        const m = document.getElementById('openSessionModal');
+        if (m) m.style.display = 'flex';
+    };
+    window.closeOpenSessionModal = function() {
+        const m = document.getElementById('openSessionModal');
+        if (m) m.style.display = 'none';
+    };
+    window.openCloseSessionModal = function() {
+        const m = document.getElementById('closeSessionModal');
+        if (m) m.style.display = 'flex';
+    };
+    window.closeCloseSessionModal = function() {
+        const m = document.getElementById('closeSessionModal');
+        if (m) m.style.display = 'none';
+    };
 </script>
 @endsection

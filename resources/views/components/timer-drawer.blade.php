@@ -1051,6 +1051,9 @@
 
         tick();
         stopwatchInterval = setInterval(tick, 1000);
+        try {
+            localStorage.setItem('active_timer_state', JSON.stringify(timerInfo));
+        } catch(e) {}
     }
 
     function clearLocalStopwatch() {
@@ -1066,6 +1069,9 @@
         if (banner) banner.style.display = 'none';
         if (globalBtn) globalBtn.classList.remove('is-active');
         if (globalClock) globalClock.innerText = '00:00:00';
+        try {
+            localStorage.removeItem('active_timer_state');
+        } catch(e) {}
     }
 
     function prefillTask(taskId) {
@@ -1089,8 +1095,13 @@
         }
     }
 
-    // Auto load on page readiness
+    // Restore running timer from localStorage instantly on page load without network overhead
     document.addEventListener('DOMContentLoaded', () => {
-        refreshTasksList();
+        try {
+            const savedTimer = localStorage.getItem('active_timer_state');
+            if (savedTimer) {
+                startLocalStopwatch(JSON.parse(savedTimer));
+            }
+        } catch(e) {}
     });
 </script>
