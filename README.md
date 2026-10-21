@@ -157,6 +157,20 @@ erDiagram
 | `POST` | `/api/v1/cash-sessions/open` | Opens a cashier shift on a terminal | `OpenCashSessionRequest` ➔ `CashSessionResource` |
 | `POST` | `/api/v1/cash-sessions/{id}/close` | Closes terminal session and records physical cash count | `CloseCashSessionRequest` ➔ `CashSessionResource` |
 
+### Web Application & Time Tracking Endpoints
+
+| Method | Route | Description | Inspired Platform |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/invoices` | Crater-styled interactive invoices dashboard with status tabs | [Crater Invoice](https://github.com/crater-invoice/crater) |
+| `GET` | `/invoices/create` | Modern New Invoice builder with client card, auto tax, and item table | [Crater Invoice](https://github.com/crater-invoice/crater) |
+| `POST` | `/invoices` | Saves draft or atomically issues fiscal invoice with `lockForUpdate` | Core Domain |
+| `GET` | `/invoices/{id}/pdf` | Generates and streams printable tax invoice A4 PDF | [barryvdh/laravel-dompdf](https://github.com/barryvdh/laravel-dompdf) |
+| `GET` | `/tasks` | Retrieves active stopwatch status and recent timer entries | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+| `POST` | `/tasks` | Registers new tasks with hours or starts live stopwatch timer | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+| `POST` | `/tasks/{id}/start-timer` | Starts live stopwatch timer on an existing task | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+| `POST` | `/tasks/{id}/stop-timer` | Pauses/stops running stopwatch and increments accumulated seconds | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+| `POST` | `/tasks/convert-to-invoice` | Bridges tracked billable hours directly into a Crater Invoice draft | [Invoice Ninja](https://github.com/invoiceninja/invoiceninja) |
+
 ---
 
 ## Local Deployment with Docker

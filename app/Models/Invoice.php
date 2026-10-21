@@ -125,6 +125,11 @@ class Invoice extends Model
         return $this->hasMany(InvoicePayment::class);
     }
 
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function getPendingAmountAttribute(): float
     {
         return (float) max(0, $this->total - $this->paid_total);

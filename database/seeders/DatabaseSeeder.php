@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             ContactSeeder::class,
             CatalogSeeder::class,
             DocumentSeriesSeeder::class,
+            TaskSeeder::class,
         ]);
     }
 }

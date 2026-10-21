@@ -163,7 +163,7 @@ class InvoiceService
         }
 
         if ($amount > $pending) {
-            throw new BusinessException("El monto a pagar (${$amount}) excede el saldo pendiente (${$pending}).");
+            throw new BusinessException("El monto a pagar ({$amount}) excede el saldo pendiente ({$pending}).");
         }
 
         return DB::transaction(function () use ($invoice, $data, $amount, $pending) {

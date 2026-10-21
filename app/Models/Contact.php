@@ -56,6 +56,16 @@ class Contact extends Model
         return $this->hasMany(Purchase::class, 'supplier_id');
     }
 
+    public function projects(): HasMany
+    {
+        return $this->hasMany(Project::class);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
+    }
+
     public function scopeCustomers(Builder $query): Builder
     {
         return $query->where('is_customer', true);
