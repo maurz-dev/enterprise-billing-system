@@ -4,13 +4,16 @@ namespace AppHttpControllers;
 
 use AppModelsInvoice;
 use AppServicesInvoiceService;
-use IlluminateHttpJsonResponse;
-use IlluminateHttpRequest;
+use AppServicesPdfService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class InvoiceController extends Controller
 {
     public function __construct(
-        protected InvoiceService $invoiceService
+        protected InvoiceService $invoiceService,
+        protected PdfService $pdfService
     ) {}
 
     public function index(Request $request): JsonResponse
@@ -90,5 +93,15 @@ class InvoiceController extends Controller
             'message' => 'Comprobante anulado y stock restituido en Kardex.',
             'data' => $voided,
         ]);
+    }
+
+    public function generatePdf(int $id)
+    {
+        $invoice = Invoice::findOrFail($id);
+        $pdf = $this->pdfService->renderInvoicePdf($invoice);
+
+        $filename = ($invoice->full_correlative ?? "borrador-{$invoice->id}") . '.pdf';
+
+        return $pdf->stream($filename);
     }
 }

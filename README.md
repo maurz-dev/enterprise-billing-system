@@ -4,10 +4,11 @@
 [![Laravel](https://img.shields.io/badge/Laravel-11.x-FF2D20?style=for-the-badge&logo=laravel&logoColor=white)](https://laravel.com/)
 [![Database](https://img.shields.io/badge/Database-PostgreSQL%20%7C%20MySQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![PDF Engine](https://img.shields.io/badge/PDF-DomPDF%20Blade-E11D48?style=for-the-badge)](https://github.com/barryvdh/laravel-dompdf)
 [![Architecture](https://img.shields.io/badge/Architecture-Clean%20%2F%20Domain--Driven-009688?style=for-the-badge)](https://en.wikipedia.org/wiki/Clean_architecture)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
-Motor backend empresarial para la emisión de **Facturación Electrónica, Gestión de Inventario con Kardex Inmutable y Control de Cajas (Punto de Venta)**. Diseñado bajo estándares de alta concurrencia, tipado estricto con PHP 8.2+ y desacoplamiento por capas (Service Layer Pattern).
+Motor backend empresarial para la emisión de **Facturación Electrónica, Generación de Comprobantes PDF, Gestión de Inventario con Kardex Inmutable y Control de Cajas (Punto de Venta)**. Diseñado bajo estándares de alta concurrencia, tipado estricto con PHP 8.2+ y desacoplamiento por capas (Service Layer Pattern).
 
 Inspirado en la arquitectura abierta y mejores prácticas de proyectos líderes como **[Crater Invoice](https://github.com/crater-invoice/crater)**, **[Invoice Ninja](https://github.com/invoiceninja/invoiceninja)** y **[Akaunting](https://github.com/akaunting/akaunting)**.
 
@@ -20,14 +21,17 @@ Inspirado en la arquitectura abierta y mejores prácticas de proyectos líderes 
      * `InvoiceService`: Orquestación de borradores, emisión con correlativo bloqueado, anulación y cobros.
      * `InventoryService`: Movimientos atómicos de kardex y recálculo de costo promedio ponderado.
      * `CashService`: Apertura/cierre de turnos de caja, conciliación de efectivo y arqueo físico.
+     * `PdfService`: Renderizado de Facturas y Boletas electrónicas en PDF de alta fidelidad con formato fiscal A4.
 2. **Kardex Inmutable con Costo Promedio Ponderado (Audit-Trail):**
    - Tabla `stock_movements` de solo inserción (*Append-Only*). Las entradas recalculan dinámicamente el costo unitario promedio; las salidas auditan el costo de venta y validan stock disponible con bloqueo pesimista (`lockForUpdate()`).
 3. **Manejo de Concurrencia en Facturación:**
    - Control de correlativos (`document_series`) con `lockForUpdate()`, garantizando numeración secuencial y sin saltos fiscales ante múltiples peticiones simultáneas.
 4. **Protección Atómica en Turnos de Caja (POS):**
    - Restricción `UNIQUE(cash_register_id, open_flag)`: `open_flag` es `true` mientras el turno está activo y pasa a `NULL` al cerrar, garantizando a nivel de motor de base de datos que jamás existan dos turnos abiertos simultáneos en una misma caja registradora.
-5. **Tipado Estricto & Enums Nativos (PHP 8.2):**
-   - Backed Enums para tipos de documentos (`DocType`), estados de facturación (`InvoiceStatus`), movimientos de inventario (`StockMovementReason`) y condiciones de pago.
+5. **Generador de Comprobantes en PDF (Blade + Dompdf):**
+   - Plantilla corporativa que incluye recuadro fiscal tributario (RUC, correlativo F001-XXXX), desglose de operaciones gravadas, cálculo de IGV/IVA (18%), descuentos y leyenda fiscal.
+6. **Datos Demo Listos para Pruebas (Database Seeders):**
+   - Semillas con empresa modelo (`Distribuidora Los Andes`), sucursal, almacén central, clientes con RUC y DNI, catálogo de productos con variantes y saldo inicial inyectado directamente en el Kardex.
 
 ---
 
@@ -39,15 +43,18 @@ Inspirado en la arquitectura abierta y mejores prácticas de proyectos líderes 
 │   ├── Exceptions/            # BusinessException (manejo unificado de errores 422)
 │   ├── Http/Controllers/      # Controladores REST delgados para la API
 │   ├── Models/                # 23 Modelos Eloquent con relaciones, casts y scopes
-│   └── Services/              # Capa de negocio (InvoiceService, InventoryService, CashService)
+│   └── Services/              # Capa de negocio (InvoiceService, InventoryService, CashService, PdfService)
 ├── bootstrap/
 │   └── app.php                # Configuración modular moderna de Laravel 11
 ├── database/
-│   └── migrations/            # 7 migraciones completas con constraints relacionales
+│   ├── migrations/            # 7 migraciones completas con constraints relacionales
+│   └── seeders/               # Seeders realistas (Company, Contacts, Catalog, Series, Kardex)
 ├── docker/
 │   └── nginx/conf.d/app.conf  # Servidor web Nginx optimizado
 ├── docs/
 │   └── er-diagram.md          # Diagrama ER completo
+├── resources/
+│   └── views/pdf/invoice.blade.php # Plantilla Blade para PDF fiscal
 ├── routes/
 │   └── api.php                # Endpoints REST organizados por dominios
 ├── composer.json              # Dependencias de producción y desarrollo
@@ -110,8 +117,8 @@ cp .env.example .env
 # 3. Levantar servicios con Docker Compose
 docker compose up -d --build
 
-# 4. Ejecutar migraciones
-docker compose exec app php artisan migrate
+# 4. Ejecutar migraciones y sembrar datos de prueba
+docker compose exec app php artisan migrate --seed
 ```
 
 ---
