@@ -1,13 +1,13 @@
 <?php
 
-namespace AppModels;
+namespace App\Models;
 
-use AppEnumsQuoteStatus;
-use IlluminateDatabaseEloquentFactoriesHasFactory;
-use IlluminateDatabaseEloquentModel;
-use IlluminateDatabaseEloquentRelationsBelongsTo;
-use IlluminateDatabaseEloquentRelationsHasMany;
-use IlluminateDatabaseEloquentRelationsHasOne;
+use App\Enums\QuoteStatus;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Quote extends Model
 {

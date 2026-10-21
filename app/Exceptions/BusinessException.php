@@ -1,9 +1,9 @@
 <?php
 
-namespace AppExceptions;
+namespace App\Exceptions;
 
 use Exception;
-use IlluminateHttpJsonResponse;
+use Illuminate\Http\JsonResponse;
 
 class BusinessException extends Exception
 {

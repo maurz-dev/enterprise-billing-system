@@ -1,14 +1,14 @@
 <?php
 
-namespace AppServices;
+namespace App\Services;
 
-use AppEnumsCashSessionStatus;
-use AppExceptionsBusinessException;
-use AppModelsCashMovement;
-use AppModelsCashRegister;
-use AppModelsCashSession;
-use AppModelsCashSessionCount;
-use IlluminateSupportFacadesDB;
+use App\Enums\CashSessionStatus;
+use App\Exceptions\BusinessException;
+use App\Models\CashMovement;
+use App\Models\CashRegister;
+use App\Models\CashSession;
+use App\Models\CashSessionCount;
+use Illuminate\Support\Facades\DB;
 
 class CashService
 {

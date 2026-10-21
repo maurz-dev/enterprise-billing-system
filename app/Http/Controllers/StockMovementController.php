@@ -1,12 +1,12 @@
 <?php
 
-namespace AppHttpControllers;
+namespace App\Http\Controllers;
 
-use AppHttpResourcesStockMovementResource;
-use AppModelsProductVariant;
-use AppModelsStockMovement;
-use IlluminateHttpJsonResponse;
-use IlluminateHttpRequest;
+use App\Http\Resources\StockMovementResource;
+use App\Models\ProductVariant;
+use App\Models\StockMovement;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class StockMovementController extends Controller
 {

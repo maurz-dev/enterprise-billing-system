@@ -1,17 +1,17 @@
 <?php
 
-namespace AppServices;
+namespace App\Services;
 
-use AppEnumsDocType;
-use AppEnumsInvoiceStatus;
-use AppExceptionsBusinessException;
-use AppModelsDocumentSeries;
-use AppModelsInvoice;
-use AppModelsInvoiceItem;
-use AppModelsInvoicePayment;
-use AppModelsProductVariant;
-use IlluminateSupportFacadesDB;
-use IlluminateSupportStr;
+use App\Enums\DocType;
+use App\Enums\InvoiceStatus;
+use App\Exceptions\BusinessException;
+use App\Models\DocumentSeries;
+use App\Models\Invoice;
+use App\Models\InvoiceItem;
+use App\Models\InvoicePayment;
+use App\Models\ProductVariant;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class InvoiceService
 {

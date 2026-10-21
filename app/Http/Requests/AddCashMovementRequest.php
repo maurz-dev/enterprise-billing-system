@@ -1,8 +1,8 @@
 <?php
 
-namespace AppHttpRequests;
+namespace App\Http\Requests;
 
-use IlluminateFoundationHttpFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 
 class AddCashMovementRequest extends FormRequest
 {

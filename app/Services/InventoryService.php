@@ -1,17 +1,17 @@
 <?php
 
-namespace AppServices;
+namespace App\Services;
 
-use AppEnumsStockMovementDirection;
-use AppEnumsStockMovementReason;
-use AppExceptionsBusinessException;
-use AppModelsInvoice;
-use AppModelsProductVariant;
-use AppModelsPurchase;
-use AppModelsStock;
-use AppModelsStockMovement;
-use IlluminateDatabaseEloquentModel;
-use IlluminateSupportFacadesDB;
+use App\Enums\StockMovementDirection;
+use App\Enums\StockMovementReason;
+use App\Exceptions\BusinessException;
+use App\Models\Invoice;
+use App\Models\ProductVariant;
+use App\Models\Purchase;
+use App\Models\Stock;
+use App\Models\StockMovement;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class InventoryService
 {

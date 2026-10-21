@@ -1,8 +1,8 @@
 <?php
 
-namespace AppServices;
+namespace App\Services;
 
-use AppModelsInvoice;
+use App\Models\Invoice;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Response;
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace AppModels;
+namespace App\Models;
 
-use AppEnumsDocType;
-use AppEnumsInvoiceStatus;
-use AppEnumsPaymentCondition;
-use IlluminateDatabaseEloquentBuilder;
-use IlluminateDatabaseEloquentFactoriesHasFactory;
-use IlluminateDatabaseEloquentModel;
-use IlluminateDatabaseEloquentRelationsBelongsTo;
-use IlluminateDatabaseEloquentRelationsHasMany;
-use IlluminateSupportStr;
+use App\Enums\DocType;
+use App\Enums\InvoiceStatus;
+use App\Enums\PaymentCondition;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Invoice extends Model
 {

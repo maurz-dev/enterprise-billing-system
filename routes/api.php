@@ -1,6 +1,6 @@
 <?php
 
-use IlluminateSupportFacadesRoute;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------

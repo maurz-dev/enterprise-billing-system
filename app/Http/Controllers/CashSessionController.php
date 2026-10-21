@@ -1,14 +1,14 @@
 <?php
 
-namespace AppHttpControllers;
+namespace App\Http\Controllers;
 
-use AppHttpRequestsAddCashMovementRequest;
-use AppHttpRequestsCloseCashSessionRequest;
-use AppHttpRequestsOpenCashSessionRequest;
-use AppHttpResourcesCashSessionResource;
-use AppModelsCashSession;
-use AppServicesCashService;
-use IlluminateHttpJsonResponse;
+use App\Http\Requests\AddCashMovementRequest;
+use App\Http\Requests\CloseCashSessionRequest;
+use App\Http\Requests\OpenCashSessionRequest;
+use App\Http\Resources\CashSessionResource;
+use App\Models\CashSession;
+use App\Services\CashService;
+use Illuminate\Http\JsonResponse;
 
 class CashSessionController extends Controller
 {

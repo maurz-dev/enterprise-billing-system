@@ -1,17 +1,17 @@
 <?php
 
-namespace AppHttpControllers;
+namespace App\Http\Controllers;
 
-use AppHttpRequestsIssueInvoiceRequest;
-use AppHttpRequestsStoreInvoiceRequest;
-use AppHttpRequestsVoidInvoiceRequest;
-use AppHttpResourcesInvoiceResource;
-use AppModelsInvoice;
-use AppServicesInvoiceService;
-use AppServicesPdfService;
-use IlluminateHttpJsonResponse;
-use IlluminateHttpRequest;
-use IlluminateHttpResourcesJsonAnonymousResourceCollection;
+use App\Http\Requests\IssueInvoiceRequest;
+use App\Http\Requests\StoreInvoiceRequest;
+use App\Http\Requests\VoidInvoiceRequest;
+use App\Http\Resources\InvoiceResource;
+use App\Models\Invoice;
+use App\Services\InvoiceService;
+use App\Services\PdfService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class InvoiceController extends Controller
 {

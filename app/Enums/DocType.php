@@ -1,6 +1,6 @@
 <?php
 
-namespace AppEnums;
+namespace App\Enums;
 
 enum DocType: string
 {
