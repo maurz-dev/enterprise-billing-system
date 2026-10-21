@@ -2,6 +2,7 @@
 
 namespace AppHttpControllers;
 
+use AppHttpResourcesStockMovementResource;
 use AppModelsProductVariant;
 use AppModelsStockMovement;
 use IlluminateHttpJsonResponse;
@@ -27,7 +28,7 @@ class StockMovementController extends Controller
                 'sku' => $variant->sku,
                 'product_name' => $variant->product->name,
             ],
-            'movements' => $kardex,
+            'movements' => StockMovementResource::collection($kardex)->response()->getData(true),
         ]);
     }
 }

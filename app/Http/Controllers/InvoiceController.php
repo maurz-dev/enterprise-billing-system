@@ -2,12 +2,16 @@
 
 namespace AppHttpControllers;
 
+use AppHttpRequestsIssueInvoiceRequest;
+use AppHttpRequestsStoreInvoiceRequest;
+use AppHttpRequestsVoidInvoiceRequest;
+use AppHttpResourcesInvoiceResource;
 use AppModelsInvoice;
 use AppServicesInvoiceService;
 use AppServicesPdfService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use IlluminateHttpJsonResponse;
+use IlluminateHttpRequest;
+use IlluminateHttpResourcesJsonAnonymousResourceCollection;
 
 class InvoiceController extends Controller
 {
@@ -16,82 +20,62 @@ class InvoiceController extends Controller
         protected PdfService $pdfService
     ) {}
 
-    public function index(Request $request): JsonResponse
+    public function index(Request $request): AnonymousResourceCollection
     {
-        $invoices = Invoice::with(['customer', 'items'])
+        $invoices = Invoice::with(['customer', 'items.variant'])
             ->when($request->status, fn ($q) => $q->where('status', $request->status))
             ->when($request->contact_id, fn ($q) => $q->where('contact_id', $request->contact_id))
             ->orderByDesc('id')
             ->paginate($request->get('per_page', 15));
 
-        return response()->json($invoices);
+        return InvoiceResource::collection($invoices);
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(StoreInvoiceRequest $request): JsonResponse
     {
-        $data = $request->validate([
-            'company_id' => 'required|exists:companies,id',
-            'branch_id' => 'required|exists:branches,id',
-            'warehouse_id' => 'required|exists:warehouses,id',
-            'contact_id' => 'required|exists:contacts,id',
-            'doc_type' => 'required|string|in:01,03,07,08',
-            'issue_date' => 'required|date',
-            'due_date' => 'nullable|date|after_or_equal:issue_date',
-            'currency' => 'required|string|size:3',
-            'notes' => 'nullable|string',
-            'items' => 'required|array|min:1',
-            'items.*.description' => 'required|string',
-            'items.*.quantity' => 'required|numeric|min:0.0001',
-            'items.*.unit_price' => 'required|numeric|min:0',
-            'items.*.product_variant_id' => 'nullable|exists:product_variants,id',
-            'items.*.tax_rate' => 'nullable|numeric|min:0',
-        ]);
+        $validated = $request->validated();
+        $validated['user_id'] = $request->user()?->id ?? 1;
 
-        $data['user_id'] = $request->user()?->id ?? 1;
-        $items = $data['items'];
-        unset($data['items']);
+        $items = $validated['items'];
+        unset($validated['items']);
 
-        $invoice = $this->invoiceService->createDraft($data, $items);
+        $invoice = $this->invoiceService->createDraft($validated, $items);
 
         return response()->json([
             'message' => 'Comprobante creado exitosamente en modo borrador.',
-            'data' => $invoice,
+            'data' => new InvoiceResource($invoice->load(['customer', 'items.variant'])),
         ], 201);
     }
 
     public function show(int $id): JsonResponse
     {
-        $invoice = Invoice::with(['items.variant', 'customer', 'branch', 'payments'])->findOrFail($id);
-        return response()->json(['data' => $invoice]);
+        $invoice = Invoice::with(['items.variant', 'customer.addresses', 'branch', 'payments'])
+            ->findOrFail($id);
+
+        return response()->json([
+            'data' => new InvoiceResource($invoice),
+        ]);
     }
 
-    public function issue(Request $request, int $id): JsonResponse
+    public function issue(IssueInvoiceRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'series' => 'required|string|size:4',
-        ]);
-
         $invoice = Invoice::findOrFail($id);
-        $issued = $this->invoiceService->issue($invoice, $request->series);
+        $issued = $this->invoiceService->issue($invoice, $request->validated('series'));
 
         return response()->json([
             'message' => "Comprobante emitido correctamente con correlativo {$issued->full_correlative}.",
-            'data' => $issued,
+            'data' => new InvoiceResource($issued->load(['customer', 'items.variant'])),
         ]);
     }
 
-    public function void(Request $request, int $id): JsonResponse
+    public function void(VoidInvoiceRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'reason' => 'required|string|min:5|max:255',
-        ]);
-
         $invoice = Invoice::findOrFail($id);
-        $voided = $this->invoiceService->void($invoice, $request->reason);
+        $voided = $this->invoiceService->void($invoice, $request->validated('reason'));
 
         return response()->json([
             'message' => 'Comprobante anulado y stock restituido en Kardex.',
-            'data' => $voided,
+            'data' => new InvoiceResource($voided),
         ]);
     }
 

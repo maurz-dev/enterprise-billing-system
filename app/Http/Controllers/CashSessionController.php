@@ -2,10 +2,13 @@
 
 namespace AppHttpControllers;
 
+use AppHttpRequestsAddCashMovementRequest;
+use AppHttpRequestsCloseCashSessionRequest;
+use AppHttpRequestsOpenCashSessionRequest;
+use AppHttpResourcesCashSessionResource;
 use AppModelsCashSession;
 use AppServicesCashService;
 use IlluminateHttpJsonResponse;
-use IlluminateHttpRequest;
 
 class CashSessionController extends Controller
 {
@@ -13,74 +16,57 @@ class CashSessionController extends Controller
         protected CashService $cashService
     ) {}
 
-    public function open(Request $request): JsonResponse
+    public function open(OpenCashSessionRequest $request): JsonResponse
     {
-        $request->validate([
-            'cash_register_id' => 'required|exists:cash_registers,id',
-            'opening_amount' => 'required|numeric|min:0',
-            'notes' => 'nullable|string',
-        ]);
-
+        $validated = $request->validated();
         $userId = $request->user()?->id ?? 1;
+
         $session = $this->cashService->openSession(
-            cashRegisterId: $request->cash_register_id,
+            cashRegisterId: (int) $validated['cash_register_id'],
             userId: $userId,
-            openingAmount: (float) $request->opening_amount,
-            notes: $request->notes
+            openingAmount: (float) $validated['opening_amount'],
+            notes: $validated['notes'] ?? null
         );
 
         return response()->json([
             'message' => 'Turno de caja abierto correctamente.',
-            'data' => $session,
+            'data' => new CashSessionResource($session),
         ], 201);
     }
 
-    public function close(Request $request, int $id): JsonResponse
+    public function close(CloseCashSessionRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'actual_cash' => 'required|numeric|min:0',
-            'denominations' => 'nullable|array',
-            'denominations.*.denomination' => 'required_with:denominations|numeric',
-            'denominations.*.quantity' => 'required_with:denominations|integer|min:0',
-            'notes' => 'nullable|string',
-        ]);
-
+        $validated = $request->validated();
         $session = CashSession::findOrFail($id);
         $userId = $request->user()?->id ?? 1;
 
         $closed = $this->cashService->closeSession(
             session: $session,
             userId: $userId,
-            actualCash: (float) $request->actual_cash,
-            denominations: $request->get('denominations', []),
-            notes: $request->notes
+            actualCash: (float) $validated['actual_cash'],
+            denominations: $validated['denominations'] ?? [],
+            notes: $validated['notes'] ?? null
         );
 
         return response()->json([
             'message' => 'Turno de caja cerrado con arqueo físico completado.',
-            'data' => $closed,
+            'data' => new CashSessionResource($closed),
         ]);
     }
 
-    public function addMovement(Request $request, int $id): JsonResponse
+    public function addMovement(AddCashMovementRequest $request, int $id): JsonResponse
     {
-        $request->validate([
-            'type' => 'required|in:in,out',
-            'amount' => 'required|numeric|min:0.01',
-            'payment_method_id' => 'required|exists:payment_methods,id',
-            'reason' => 'required|string|max:200',
-        ]);
-
+        $validated = $request->validated();
         $session = CashSession::findOrFail($id);
         $userId = $request->user()?->id ?? 1;
 
         $movement = $this->cashService->addMovement(
             session: $session,
             userId: $userId,
-            type: $request->type,
-            amount: (float) $request->amount,
-            paymentMethodId: $request->payment_method_id,
-            reason: $request->reason
+            type: $validated['type'],
+            amount: (float) $validated['amount'],
+            paymentMethodId: (int) $validated['payment_method_id'],
+            reason: $validated['reason']
         );
 
         return response()->json([
